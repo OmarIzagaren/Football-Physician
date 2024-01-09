@@ -66,7 +66,7 @@ def player_details(request):
             for field in form:
                 if field.errors: 
                     errors_list.append(field.errors)
-        form.errors.clear()
+        #form.errors.clear()
         return render(request, 'player.html', {'form':form, 'errors_list':errors_list})
     else: 
         messages.success(request, "NOt logged in")

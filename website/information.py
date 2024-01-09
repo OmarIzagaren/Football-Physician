@@ -1,5 +1,5 @@
 positions = [
-    ("", "Select Position"),
+    ("", "Select Position..."),
     ("Goalkeeper", "Goalkeeper"),
     ("Defender", "Defender"),
     ("Midfielder", "Midfielder"),
@@ -7,7 +7,7 @@ positions = [
 ]
 
 countries = [
-    ("", "Select Country of Origin"),
+    ("", "Select Country of Origin..."),
     ('Afghanistan', 'Afghanistan'), ('Aland Islands', 'Aland Islands'), ('Albania', 'Albania'), ('Algeria', 'Algeria'), ('American Samoa', 'American Samoa'), ('Andorra', 'Andorra'), 
     ('Angola', 'Angola'), ('Anguilla', 'Anguilla'), ('Antarctica', 'Antarctica'), ('Antigua and Barbuda', 'Antigua and Barbuda'), ('Argentina', 'Argentina'), ('Armenia', 'Armenia'), 
     ('Aruba', 'Aruba'), ('Australia', 'Australia'), ('Austria', 'Austria'), ('Azerbaijan', 'Azerbaijan'), ('Bahamas', 'Bahamas'), ('Bahrain', 'Bahrain'), ('Bangladesh', 'Bangladesh'), 

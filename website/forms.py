@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from .models import Player
 from django import forms
 from .information import positions,countries
+from datetime import date, timedelta
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
@@ -48,10 +49,10 @@ position_array = [
     ("Attacker", "Attacker"),
 ]
 class PlayerForm(forms.ModelForm):
-    first_name = forms.CharField(required=True, label="First Name", max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
+    first_name = forms.CharField(required=True, label="", max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
     last_name = forms.CharField(required=True,label="", max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
     position = forms.CharField(required=True,label="", max_length=50, widget=forms.Select(choices=positions,attrs={'class':'form-control', 'placeholder':'Position'}))
-    age = forms.CharField(required=True,label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Age'}))
+    date_of_birth = forms.DateField(required=True,label="", widget=forms.DateInput(attrs={'class':'form-control','type':'date', 'placeholder':'Date of Birth'}))
     height = forms.CharField(required=True,label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Height'}))
     weight = forms.CharField(required=True,label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Weight'}))
     country = forms.CharField(required=True,label="", max_length=50, widget=forms.Select(choices=countries,attrs={'class':'form-control', 'placeholder':'Country'}))
@@ -59,3 +60,16 @@ class PlayerForm(forms.ModelForm):
     class Meta: 
         model = Player
         exclude = ("user", )
+    
+    def __init__(self, *args, **kwargs):
+        super(PlayerForm, self).__init__(*args, **kwargs)
+        # Set the max attribute for date_of_birth field
+        self.fields['date_of_birth'].widget.attrs['max'] = str(date.today() - timedelta(days=365.25 * 16))
+        self.fields['date_of_birth'].help_text = '<span class="form-text text-muted"><small>A player must be aged 16 or over.</small></span>'
+
+    def clean_date_of_birth(self):
+        date_of_birth = self.cleaned_data.get("date_of_birth")
+        print("Hello")
+        if date.today() < date_of_birth:
+            raise forms.ValidationError("Date of Birth can not be in the future.")
+        return date_of_birth
