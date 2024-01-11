@@ -1,6 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from .models import Player, Injury
+from .models import Player, Injury, CustomUser
 from django import forms
 from .information import positions,countries,injuries
 from datetime import date, timedelta
@@ -9,10 +8,11 @@ class SignUpForm(UserCreationForm):
     email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
     first_name = forms.CharField(label="", max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
     last_name = forms.CharField(label="", max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
+    is_business_user = forms.BooleanField(required=False)
 
     class Meta:
-        model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
+        model = CustomUser
+        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2','is_business_user')
 
 
     def __init__(self, *args, **kwargs):
@@ -35,7 +35,7 @@ class SignUpForm(UserCreationForm):
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
-        email_count = User.objects.filter(email=email).count()
+        email_count = CustomUser.objects.filter(email=email).count()
         if email_count > 0:
             raise forms.ValidationError("A user with that email already exists.")
         return email
@@ -98,7 +98,6 @@ class InjuryForm(forms.ModelForm):
             self.fields['player'].queryset = players 
             self.fields['player'].initial = players.first()
             self.one_player = False
-            print("Hello")
         else:
             self.fields['player'].queryset = players
             self.one_player = True
