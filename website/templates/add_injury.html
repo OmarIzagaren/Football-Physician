@@ -19,19 +19,19 @@
 		
 	{% endif %}
 
-    {% if form.one_player %}
+{% if form.one_player %}
         <div class="col-auto my-1">
             {{ form.player }}
         </div>
             </br>
     
-    {% else %}
+{% else %}
 
     <div style="display: none;">
         {{ form.player }}
     </div>
 
-    {% endif %}
+{% endif %}
     <div class="col-auto my-1">
         {{ form.injury }}
     </div>

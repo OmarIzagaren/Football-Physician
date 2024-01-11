@@ -97,11 +97,11 @@ class InjuryForm(forms.ModelForm):
         elif players.count() == 1:
             self.fields['player'].queryset = players 
             self.fields['player'].initial = players.first()
-            self.only_one_player = False
+            self.one_player = False
             print("Hello")
         else:
             self.fields['player'].queryset = players
-            self.only_one_player = True
+            self.one_player = True
     
     def clean(self):
         cleaned_data = super().clean()
