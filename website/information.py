@@ -56,3 +56,35 @@ countries = [
     ('Zambia', 'Zambia'), ('Zimbabwe', 'Zimbabwe')
     ]
 
+injuries = [
+    ("", "Select Injury..."),
+    ('ankle problems', 'ankle problems'), ('broken kneecap', 'broken kneecap'), ('patellar tendon rupture', 'patellar tendon rupture'), ('knee injury', 'knee injury'), 
+    ('cruciate ligament tear', 'cruciate ligament tear'), ('patellar tendon dislocation', 'patellar tendon dislocation'), ('cruciate ligament strain', 'cruciate ligament strain'), 
+    ('patellar tendinopathy syndrome', 'patellar tendinopathy syndrome'), ('knee collateral ligament tear', 'knee collateral ligament tear'), ('ligament tear', 'ligament tear'), 
+    ('outer ligament tear', 'outer ligament tear'), ('knee medial ligament tear', 'knee medial ligament tear'), ('internal ligament strain', 'internal ligament strain'), 
+    ('cruciate ligament injury', 'cruciate ligament injury'), ('torn lateral knee ligament', 'torn lateral knee ligament'), 
+    ('inner ligament tear in ankle joint', 'inner ligament tear in ankle joint'), ('outer ligament problems', 'outer ligament problems'), 
+    ('ankle ligament tear', 'ankle ligament tear'), ('leg injury', 'leg injury'), ('achilles tendon rupture', 'achilles tendon rupture'), ('ligament stretching', 'ligament stretching'), 
+    ('broken ankle', 'broken ankle'), ('collateral ligament tear', 'collateral ligament tear'), ('internal ligament tear', 'internal ligament tear'), ('ankle injury', 'ankle injury'),
+    ('tendon tear', 'tendon tear'), ('inner ankle ligament tear', 'inner ankle ligament tear'), ('broken leg', 'broken leg'), 
+    ('syndesmotic ligament tear', 'syndesmotic ligament tear'), ('inflammation in the ankle joint', 'inflammation in the ankle joint'), 
+    ('torn ligaments in the tarsus', 'torn ligaments in the tarsus'), ('torn ligaments', 'torn ligaments'), 
+    ('partial damage to the cruciate ligament', 'partial damage to the cruciate ligament'), ('edema in the knee', 'edema in the knee'), 
+    ('double ligament tear', 'double ligament tear'), ('ligament injury', 'ligament injury'), ('inner knee ligament tear', 'inner knee ligament tear'), 
+    ('inflammation of ligaments in the knee', 'inflammation of ligaments in the knee'), ('collateral ankle ligament tear', 'collateral ankle ligament tear'), 
+    ('injury to the ankle', 'injury to the ankle'), ('patellar tendon tear', 'patellar tendon tear'), ('bruise on ankle', 'bruise on ankle'), ('ankle sprain', 'ankle sprain'), 
+    ('inner ligament stretch of the knee', 'inner ligament stretch of the knee'), ('capsular tear of ankle joint', 'capsular tear of ankle joint'), 
+    ('inflammation of the biceps tendon in the thigh', 'inflammation of the biceps tendon in the thigh'), ('collateral ligament injury', 'collateral ligament injury'), 
+    ('overstretching of the syndesmotic ligament', 'overstretching of the syndesmotic ligament'), ('knee collateral ligament strain', 'knee collateral ligament strain'), 
+    ('torn knee ligaments', 'torn knee ligaments'), (' achilles tendon contusion', ' achilles tendon contusion'), ('achilles tendon irritation', 'achilles tendon irritation'), 
+    ('ankle surgery', 'ankle surgery'), ('tendon irritation', 'tendon irritation'), ('tendon rupture', 'tendon rupture'), ('torn lateral ankle ligament', 'torn lateral ankle ligament'), 
+    ('cyst in the knee', 'cyst in the knee'), ('partial patellar tendon tear', 'partial patellar tendon tear'), ('inflammation in the knee', 'inflammation in the knee'), 
+    ('torn ankle ligaments', 'torn ankle ligaments'), ('inner ligament injury', 'inner ligament injury'), ('bruised knee', 'bruised knee'), 
+    ('cruciate ligament surgery', 'cruciate ligament surgery'), ('tendonitis', 'tendonitis'), ('patellar tendon irritation', 'patellar tendon irritation'), 
+    ('longitudinal tendon tear', 'longitudinal tendon tear'), ('knee surgery', 'knee surgery'), ('dislocation fracture of the ankle joint', 'dislocation fracture of the ankle joint'), 
+    ('achilles tendon surgery', 'achilles tendon surgery'), ('achilles tendon problems', 'achilles tendon problems'), ('knee problems', 'knee problems'), 
+    ('dislocation of the kneecap', 'dislocation of the kneecap'), ('peroneus tendon injury', 'peroneus tendon injury'), ('bruise on the ankle joint', 'bruise on the ankle joint'), 
+    ('knee bruise', 'knee bruise'), ('syndesmosis ligament tear', 'syndesmosis ligament tear'), ('lower leg fracture', 'lower leg fracture'), 
+    ('patellar tendon problems', 'patellar tendon problems')
+    ]
+

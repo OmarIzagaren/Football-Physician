@@ -11,10 +11,13 @@ class Player(models.Model):
     weight = models.IntegerField()
     country = models.CharField(max_length=50)
 
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
 class Injury(models.Model):
     player = models.ForeignKey(Player, null=True, on_delete= models.CASCADE)
     injury = models.CharField(max_length=50)
     injury_start_date = models.DateField()
-    injury_end_date = models.DateField()
-    injury_age = models.IntegerField()
+    injury_end_date = models.DateField(null=True, blank=True)
+    injury_age = models.IntegerField(blank=True)
     injured = models.BooleanField(default = False)

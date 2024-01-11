@@ -1,8 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Player
+from .models import Player, Injury
 from django import forms
-from .information import positions,countries
+from .information import positions,countries,injuries
 from datetime import date, timedelta
 
 class SignUpForm(UserCreationForm):
@@ -51,11 +51,11 @@ position_array = [
 class PlayerForm(forms.ModelForm):
     first_name = forms.CharField(required=True, label="", max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
     last_name = forms.CharField(required=True,label="", max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
-    position = forms.CharField(required=True,label="", max_length=50, widget=forms.Select(choices=positions,attrs={'class':'form-control', 'placeholder':'Position'}))
+    position = forms.CharField(required=True,label="", widget=forms.Select(choices=positions,attrs={'class':'form-control', 'placeholder':'Position'}))
     date_of_birth = forms.DateField(required=True,label="", widget=forms.DateInput(attrs={'class':'form-control','type':'date', 'placeholder':'Date of Birth'}))
     height = forms.CharField(required=True,label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Height'}))
     weight = forms.CharField(required=True,label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Weight'}))
-    country = forms.CharField(required=True,label="", max_length=50, widget=forms.Select(choices=countries,attrs={'class':'form-control', 'placeholder':'Country'}))
+    country = forms.CharField(required=True,label="", widget=forms.Select(choices=countries,attrs={'class':'form-control', 'placeholder':'Country'}))
 
     class Meta: 
         model = Player
@@ -69,7 +69,67 @@ class PlayerForm(forms.ModelForm):
 
     def clean_date_of_birth(self):
         date_of_birth = self.cleaned_data.get("date_of_birth")
-        print("Hello")
         if date.today() < date_of_birth:
             raise forms.ValidationError("Date of Birth can not be in the future.")
         return date_of_birth
+
+
+class InjuryForm(forms.ModelForm):
+    player = forms.ModelChoiceField(queryset=Player.objects.none(),required=True,label="",widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Player'}))
+    injury = forms.CharField(required=True,label="", max_length=50, widget=forms.Select(choices=injuries,attrs={'class':'form-control', 'placeholder':'Injury'}))
+    injury_start_date = forms.DateField(required=True,label="", widget=forms.DateInput(attrs={'class':'form-control','type':'date', 'placeholder':'Injury Start Date'}))
+    injury_end_date = forms.DateField(required=False,label="", widget=forms.DateInput(attrs={'class':'form-control','type':'date' ,'placeholder':'Injury End Date'}))
+    injury_age = 0
+    injured = forms.BooleanField(required=False)
+
+    class Meta: 
+        model = Injury
+        fields = ('player','injury','injury_start_date','injury_end_date','injury_age','injured')
+    
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        players = Player.objects.filter(user=user)
+        self.fields['injury_start_date'].widget.attrs['max'] = str(date.today())
+        self.fields['injury_end_date'].widget.attrs['max'] = str(date.today())
+
+        if players.count() == 0:
+            raise forms.ValidationError("No player information exists for this account, you must create a player.")
+        elif players.count() == 1:
+            self.fields['player'].queryset = players 
+            self.fields['player'].initial = players.first()
+            self.only_one_player = False
+            print("Hello")
+        else:
+            self.fields['player'].queryset = players
+            self.only_one_player = True
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        injured = cleaned_data.get("injured")
+        print(injured)
+        if injured:
+            cleaned_data['injury_end_date'] = None
+        else: 
+            if not cleaned_data['injury_end_date']: 
+                self.add_error('injury_end_date', "The injury end date field is required.")
+
+        injury_start_date = cleaned_data.get("injury_start_date")
+        injury_end_date = cleaned_data.get("injury_end_date")
+
+        try:
+            if injury_start_date > injury_end_date:
+                self.add_error('injury_end_date', "The injury start date cannot be after the injury end date.")
+        except:
+            pass
+
+        player = cleaned_data.get("player")
+
+        if player and injury_start_date:
+            injury_age = injury_start_date.year - player.date_of_birth.year - ((injury_start_date.month, injury_start_date.day) < (player.date_of_birth.month, player.date_of_birth.day))
+            print(injury_age)
+            self.fields['injury_age'] = injury_age
+            cleaned_data['injury_age'] = injury_age
+
+        print(cleaned_data)
+        return cleaned_data
+

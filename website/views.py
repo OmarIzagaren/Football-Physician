@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib import messages
-from .forms import SignUpForm, PlayerForm
+from .forms import SignUpForm, PlayerForm, InjuryForm
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+
 
 
 def home(request): 
@@ -66,8 +68,38 @@ def player_details(request):
             for field in form:
                 if field.errors: 
                     errors_list.append(field.errors)
-        #form.errors.clear()
+        form.errors.clear()
         return render(request, 'player.html', {'form':form, 'errors_list':errors_list})
     else: 
         messages.success(request, "NOt logged in")
         return redirect('home')
+
+
+def injury_details(request):
+    if request.user.is_authenticated:
+        try:
+            form = InjuryForm(user=request.user)
+            if request.method == 'POST':
+                form = InjuryForm(request.user, request.POST)
+                
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, "Successfully Added")
+                    return redirect('home')
+                
+                errors_list = []
+                if form.errors:
+                    for field in form:
+                        if field.errors: 
+                            errors_list.append(field.errors)
+                form.errors.clear()
+                return render(request, 'add_injury.html', {'form':form, 'errors_list':errors_list})
+        except ValidationError as e:
+            messages.error(request, str(e))
+            return redirect('player')
+    else: 
+        messages.error(request, "Not logged in")
+        return redirect('home')
+
+
+    return render(request, 'add_injury.html', {'form': form})
