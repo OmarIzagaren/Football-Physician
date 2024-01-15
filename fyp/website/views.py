@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 
 
 def home(request): 
+    print("test")
     return render(request, 'home.html', {})
 
 
