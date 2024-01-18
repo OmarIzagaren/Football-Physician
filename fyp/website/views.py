@@ -3,6 +3,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import SignUpForm, PlayerForm, InjuryForm
 from django.core.exceptions import ValidationError
+from .models import Player, Injury
+from django.http import HttpResponse
+from datetime import date
+
 
 
 
@@ -104,3 +108,40 @@ def injury_details(request):
 
 
     return render(request, 'add_injury.html', {'form': form})
+
+def player_view(request):
+    if request.user.is_authenticated:
+        players = Player.objects.filter(user=request.user)
+    
+    
+        return render(request, 'view_player.html', {'players': players})
+    else: 
+        messages.error(request, "Not logged in")
+        return redirect('home')
+
+def get_player_injuries(request):
+    selected_player = request.GET.get('selected_player', None)
+    print("Hello")
+    print(selected_player)
+    
+    injuries = Injury.objects.filter(player=selected_player)
+    injuries_html = ""
+    
+    for injury in injuries:
+        end_date = injury.injury_end_date
+        if end_date is None:
+            end_date = date.today()
+            row_class = 'table-danger' 
+        else: 
+            row_class = ""
+
+        injuries_html += (
+            f'<tr class="{row_class}">'
+            f'<td>{injury}</td>'
+            f'<td>{injury.injury_start_date}</td>'
+            f'<td>{end_date}</td>'
+            f'<td>{injury.injury_age}</td>'
+            f'</tr>'
+        )
+
+    return HttpResponse(injuries_html)

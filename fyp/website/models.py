@@ -28,3 +28,6 @@ class Injury(models.Model):
     injury_end_date = models.DateField(null=True, blank=True)
     injury_age = models.IntegerField(blank=True)
     injured = models.BooleanField(default = False)
+
+    def __str__(self):
+        return f"{self.injury}"

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Hello</h1>
+{% if players %}
+<div class="form-group">
+    <select class="form-control" id="playersDropdown">
+        <option value="no player">Select a player...</option>
+      {% for player in players %}
+        <option value="{{ player.id }}">{{ player }}</option>
+      {% endfor %}
+    </select>
+  
+{% endif %}
+<br/>
+    
+
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Injury</th>
+            <th scope="col">Date Acquired</th>
+            <th scope="col">Date Recovered</th>
+            <th scope="col">Age of Injury</th>
+        </tr>
+        </thead>
+        <tbody id="injuriesContainer"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var dropdown = document.getElementById('playersDropdown');
+        var displayInjuries = document.getElementById('injuriesContainer');
+    
+        dropdown.addEventListener('change', function() {
+            var selectedPlayer = dropdown.value;
+        
+            if (selectedPlayer == "no player") {
+                displayInjuries.innerHTML = "";
+            } 
+            else {
+                var xhr = new XMLHttpRequest();
+    
+                xhr.open('GET', 'get_player_injuries/?selected_player=' + encodeURIComponent(selectedPlayer), true);
+    
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        displayInjuries.innerHTML = xhr.responseText;
+                    }
+                };
+                xhr.send();
+            }
+        });
+    });
+    </script>
+
+{% endblock %}
