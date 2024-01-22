@@ -93,7 +93,7 @@ class MakePrediction:
     def clean_input(self):
         clean_array =[]
         clean_array=[self.input_array[1],self.input_array[2],self.input_array[3],self.input_array[6],self.input_array[5]]
-        print(clean_array)
+        #print(clean_array)
 
         median_dbi,avg_loi,mode_is,avg_aoi,noi = self.calculate_injury_averages(self.input_array[7])
         clean_array.extend([median_dbi,avg_loi,mode_is,avg_aoi,noi,self.input_array[8]])
@@ -101,11 +101,11 @@ class MakePrediction:
         clean_array.extend(self.one_hot_encode_position(self.input_array[0]))
 
         clean_array.extend(self.one_hot_encode_region(self.input_array[4]))
-        print(clean_array)
+        #print(clean_array)
         self.input_array = clean_array
     
     def prediction(self):
-        print(self.input_array)
+        #print(self.input_array)
         self.input_array[3] = np.log(self.input_array[3] +1)
         self.input_array[4] = np.log(self.input_array[4] +1)
         self.input_array[6] = np.log(self.input_array[6] +1)
@@ -117,8 +117,26 @@ class MakePrediction:
 
         final_array = pd.DataFrame([self.input_array])
         final_array.columns = ['Age','Height','Weight','dsli','mins','median_dbi','avg_loi','mode_is','avg_aoi','noi','injured','Attack','Defender','Goalkeeper','midfield','Caribbean','Central America','Eastern Africa','Eastern Asia','Eastern Europe','Middle Africa','Northern Africa','Northern America','Northern Europe','South America','Southern Africa','Southern Europe','Western Africa','Western Asia','Western Europe']
-        print([final_array])
-        return loadedrf.predict(final_array)
+        #print([final_array])
+        final_percentage = loadedrf.predict(final_array)
+
+        if final_percentage <= 10:
+            return "Very Low Risk"
+        
+        elif 10 < final_percentage <= 30:
+            return "Low Risk"
+        
+        elif 30 < final_percentage <= 50:
+            return "Moderate Risk"
+        
+        elif 50 < final_percentage <= 70:
+            return "High Risk"
+        
+        elif 70 < final_percentage <= 90:
+            return "Very High Risk"
+        
+        elif 90 < final_percentage:
+            return "Extreme Risk"
 
 array = ['Defender',25,188,78,'Western Europe',[4, 90],500,[['Cruciate ligament tear', 20, 180, 26],['Ankle injury', 1920, 72, 26], ['Inner knee ligament tear', 0, 59, 26]],0]
 

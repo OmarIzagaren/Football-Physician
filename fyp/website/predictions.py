@@ -1,6 +1,8 @@
 from website.PredictiveModels import InjuryPrediction
 from .models import Player, Injury
 from datetime import date
+import requests
+import json
 
 today = date.today()
 
@@ -20,7 +22,7 @@ def clean_and_predict(player_id,minutes):
     age = today.year - date_of_birth.year - ((today.month, today.day) < (date_of_birth.month, date_of_birth.day))
 
     #Append player info to array
-    player_details.extend([player.position, age, player.height, player.weight, player.country, total_minutes])
+    player_details.extend([player.position, age, player.height, player.weight, getRegion(player.country), total_minutes])
 
     #Get injury details and put into array
     injuries = Injury.objects.filter(player=player)
@@ -49,17 +51,53 @@ def clean_and_predict(player_id,minutes):
             if injury.injured:
                 injured = 1
           
-        #Sorting the injury array based on date, going from closest start date to farthest 
-        injury_array = sorted(injury_array, key=lambda x: x[1], reverse=True)
+        #Sorting the injury array based on date, going from closest end date to farthest 
+        injury_array = sorted(injury_array, key=lambda x: x[2], reverse=True)
         print(injury_array)
 
-        #Put injuries into start date order, from closest date to furthest 
-
         #Calculate days since last injured
+        days_since_injured = (today - injury_array[0][2]).days
+        print(days_since_injured)
+        player_details.append(days_since_injured)
+
+        #Calculate length of injuries
+        for injury in injury_array:
+            injury_length = (injury[2] - injury[1]).days
+            injury.append(injury_length)
+            #print(injury_length)
 
         #Calculate days between injuries
-    
-        #Calculate length of injuries
+        print("")
+        for i in range(len(injury_array)):
+            if i == (len(injury_array)-1):
+                days_between_injuries = 0
+                injury_array[i].append(days_between_injuries)
+                continue
+            days_between_injuries = (injury_array[i][1] - injury_array[i+1][2]).days
+            injury_array[i].append(days_between_injuries)
+            #print(days_between_injuries)
+            
+        #Replace dates with the days between injuries and length of injuries as this is what the model needs
+        for injury in injury_array:
+            injury[1] = injury[5]
+            injury[2] = injury[4]
+            injury.pop()
+            injury.pop()
+            print(injury)
+        
+        player_details.extend([injury_array,injured])
+        print(player_details)
+        prediction_input = InjuryPrediction.MakePrediction(player_details)
+        return prediction_input.prediction()
 
-    
-
+#This function takes the country and returns the countries region i.e. Western Europe, Northern African, etc.
+def getRegion(country):
+        url = f"https://api.api-ninjas.com/v1/country?name={country}"
+        response = requests.get(url, headers={'X-Api-Key': 'eco5fNw060OIGUTVv5Y8LA==WWjLCtwBHJYZt9Aw'})
+        if response.status_code == requests.codes.ok:
+            dictonary = json.loads(response.text)
+            dictonary = dictonary[0]
+            region = dictonary["region"]
+            return region
+        else:
+            print("Error:", response.status_code, response.text)

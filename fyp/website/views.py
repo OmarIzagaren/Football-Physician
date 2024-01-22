@@ -163,7 +163,8 @@ def predict_injury(request):
             form = request.POST
             player_id = form.get('player')
             games = form.getlist('games')
-            print(clean_and_predict(player_id, games))
+            injury_risk_prediction = clean_and_predict(player_id, games)
+            print(injury_risk_prediction)
             return render(request, 'injury_prediction.html', {'players': players, 'form':form})
     else: 
         messages.error(request, "Not logged in")
