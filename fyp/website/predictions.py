@@ -53,11 +53,11 @@ def clean_and_predict(player_id,minutes):
           
         #Sorting the injury array based on date, going from closest end date to farthest 
         injury_array = sorted(injury_array, key=lambda x: x[2], reverse=True)
-        print(injury_array)
+        #print(injury_array)
 
         #Calculate days since last injured
         days_since_injured = (today - injury_array[0][2]).days
-        print(days_since_injured)
+        #print(days_since_injured)
         player_details.append(days_since_injured)
 
         #Calculate length of injuries
@@ -86,7 +86,7 @@ def clean_and_predict(player_id,minutes):
             print(injury)
         
         player_details.extend([injury_array,injured])
-        print(player_details)
+        #print(player_details)
         prediction_input = InjuryPrediction.MakePrediction(player_details)
         return prediction_input.prediction()
 

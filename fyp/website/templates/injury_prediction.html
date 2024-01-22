@@ -24,34 +24,69 @@
 
         <br/>
         <h2>Games in last month</h2>
-        <div id="gamesContainer" class="mb-3"></div>
+        <div id="gamesContainer" class="mb-3">
+        {% if games %}
+            {% for game in games %}
+                <div class="mb-3">
+                    <input type="number" class="form-control d-inline mr-2" name="games[]" value="{{ game }}" placeholder="Enter minutes played for this game" required min="0" max="120">
+                    <button type="button" class="btn btn-danger" onclick="removeGame(this)">Remove</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        </div>
 
         <button type="button" class="btn btn-primary" onclick="addGame()">Add Game</button>
         <button type="submit" class="btn btn-success">Submit</button>
     </form>
 </div>
+<br/>
+
+{% if injury_risk_prediction %}
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+    <div class="card" id="prediction">
+        <div class="card-body">
+            {{ injury_risk_prediction }}
+        </div>
+      </div>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+{% endif %}
 
 <script>
     var gameCount = 0;
 
-    function addGame() {
-        var gamesContainer = document.getElementById('gamesContainer');
-        
+    if (document.getElementById('prediction')) {
+        document.getElementById('prediction').scrollIntoView({ behavior: 'smooth' });
+    }
 
+    function addGame(current) {
+        var gamesContainer = document.getElementById('gamesContainer');
+    
         // Create a new div to hold the input and remove button
         var gameDiv = document.createElement('div');
         gameDiv.className = 'mb-3';
-
+    
         // Create a new input element for the new game
         var newInput = document.createElement('input');
         newInput.type = 'number';
         newInput.className = 'form-control d-inline mr-2';  // Bootstrap styling
-        newInput.name = 'games';
+        newInput.name = 'games[]';  // Use array syntax
         newInput.placeholder = 'Enter minutes played for this game';
         newInput.required = true;
         newInput.min = 0;
         newInput.max = 120;  // Set maximum input value
-
+    
         // Create a new remove button
         var removeButton = document.createElement('button');
         removeButton.type = 'button';
@@ -60,15 +95,14 @@
         removeButton.onclick = function() {
             gamesContainer.removeChild(gameDiv);
         };
-
+    
         // Append the new input element and remove button to the game div
         gameDiv.appendChild(newInput);
         gameDiv.appendChild(removeButton);
-
+    
         // Append the game div to the games container
         gamesContainer.appendChild(gameDiv);
     }
-
 
 </script>
 

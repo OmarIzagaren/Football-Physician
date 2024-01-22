@@ -119,8 +119,6 @@ def player_view(request):
 
 def get_player_injuries(request):
     selected_player = request.GET.get('selected_player', None)
-    print("Hello")
-    print(selected_player)
     
     injuries = Injury.objects.filter(player=selected_player).order_by('-injury_start_date')
     injuries_html = (
@@ -162,10 +160,12 @@ def predict_injury(request):
         if request.method == 'POST':
             form = request.POST
             player_id = form.get('player')
-            games = form.getlist('games')
+            games = form.getlist('games[]')
             injury_risk_prediction = clean_and_predict(player_id, games)
-            print(injury_risk_prediction)
-            return render(request, 'injury_prediction.html', {'players': players, 'form':form})
+            print(form)
+            print(games)
+            #print(injury_risk_prediction)
+            return render(request, 'injury_prediction.html', {'players': players, 'form':form, 'games':games,'injury_risk_prediction': injury_risk_prediction})
     else: 
         messages.error(request, "Not logged in")
         return redirect('home')
