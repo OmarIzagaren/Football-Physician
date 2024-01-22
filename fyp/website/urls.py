@@ -10,4 +10,5 @@ urlpatterns = [
     path('add_injury/', views.injury_details, name='add_injury'),
     path('view_player/', views.player_view, name='view_player'),
     path('view_player/get_player_injuries/', views.get_player_injuries, name='get_player_injuries'),
+    path('injury_prediction/', views.predict_injury, name='injury_prediction'),
 ]

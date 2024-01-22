@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h1>Injury Prediction</h1>
+    <p>For this section you will need to firstly select a player to predict their likelihood of a knee injury. Once a player is selected
+        you need to input the games they have played <strong>within the last month</strong>, once this is done you can run the prediction.
+    </p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <h2>Select Player</h2>
+        {% if players %}
+        <div class="form-group">
+            <select class="form-control" id="playersDropdown" name="player" required>
+                <option value="">Select a player...</option>
+                {% for player in players %}
+                    <option value="{{ player.id }}">{{ player }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endif %}
+
+        <br/>
+        <h2>Games in last month</h2>
+        <div id="gamesContainer" class="mb-3"></div>
+
+        <button type="button" class="btn btn-primary" onclick="addGame()">Add Game</button>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+</div>
+
+<script>
+    var gameCount = 0;
+
+    function addGame() {
+        var gamesContainer = document.getElementById('gamesContainer');
+        
+
+        // Create a new div to hold the input and remove button
+        var gameDiv = document.createElement('div');
+        gameDiv.className = 'mb-3';
+
+        // Create a new input element for the new game
+        var newInput = document.createElement('input');
+        newInput.type = 'number';
+        newInput.className = 'form-control d-inline mr-2';  // Bootstrap styling
+        newInput.name = 'games';
+        newInput.placeholder = 'Enter minutes played for this game';
+        newInput.required = true;
+        newInput.min = 0;
+        newInput.max = 120;  // Set maximum input value
+
+        // Create a new remove button
+        var removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'btn btn-danger';
+        removeButton.textContent = 'Remove';
+        removeButton.onclick = function() {
+            gamesContainer.removeChild(gameDiv);
+        };
+
+        // Append the new input element and remove button to the game div
+        gameDiv.appendChild(newInput);
+        gameDiv.appendChild(removeButton);
+
+        // Append the game div to the games container
+        gamesContainer.appendChild(gameDiv);
+    }
+
+
+</script>
+
+{% endblock %}

@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from .models import Player, Injury
 from django.http import HttpResponse
 from datetime import date
+from .predictions import clean_and_predict
 
 
 
@@ -13,7 +14,6 @@ from datetime import date
 def home(request): 
     print("test")
     return render(request, 'home.html', {})
-
 
 def login_user(request): 
     if request.method == 'POST':
@@ -76,7 +76,7 @@ def player_details(request):
         form.errors.clear()
         return render(request, 'player.html', {'form':form, 'errors_list':errors_list})
     else: 
-        messages.success(request, "NOt logged in")
+        messages.success(request, "Not logged in")
         return redirect('home')
 
 
@@ -112,8 +112,6 @@ def injury_details(request):
 def player_view(request):
     if request.user.is_authenticated:
         players = Player.objects.filter(user=request.user)
-    
-    
         return render(request, 'view_player.html', {'players': players})
     else: 
         messages.error(request, "Not logged in")
@@ -124,8 +122,17 @@ def get_player_injuries(request):
     print("Hello")
     print(selected_player)
     
-    injuries = Injury.objects.filter(player=selected_player)
-    injuries_html = ""
+    injuries = Injury.objects.filter(player=selected_player).order_by('-injury_start_date')
+    injuries_html = (
+        f'<thead>'
+        f'<tr>'
+        f'<th scope="col">Injury</th>'
+        f'<th scope="col">Date Injured</th>'
+        f'<th scope="col">Date Recovered</th>'
+        f'<th scope="col">Age of Injury</th>'
+        f'</tr>'
+        f'</thead>'
+    )
     
     for injury in injuries:
         end_date = injury.injury_end_date
@@ -137,11 +144,28 @@ def get_player_injuries(request):
 
         injuries_html += (
             f'<tr class="{row_class}">'
-            f'<td>{injury}</td>'
+            f'<td>{injury.injury}</td>'
             f'<td>{injury.injury_start_date}</td>'
             f'<td>{end_date}</td>'
             f'<td>{injury.injury_age}</td>'
             f'</tr>'
         )
+    
+    if bool(injuries) == False:
+        return HttpResponse("This player has no injuries.")
 
     return HttpResponse(injuries_html)
+
+def predict_injury(request):
+    if request.user.is_authenticated:
+        players = Player.objects.filter(user=request.user)
+        if request.method == 'POST':
+            form = request.POST
+            player_id = form.get('player')
+            games = form.getlist('games')
+            print(clean_and_predict(player_id, games))
+            return render(request, 'injury_prediction.html', {'players': players, 'form':form})
+    else: 
+        messages.error(request, "Not logged in")
+        return redirect('home')
+    return render(request, 'injury_prediction.html', {'players': players})
