@@ -20,6 +20,7 @@ def clean_and_predict(player_id,minutes):
     #Calculate player age
     date_of_birth = player.date_of_birth
     age = today.year - date_of_birth.year - ((today.month, today.day) < (date_of_birth.month, date_of_birth.day))
+    print(age)
 
     #Append player info to array
     player_details.extend([player.position, age, player.height, player.weight, getRegion(player.country), total_minutes])
@@ -83,10 +84,9 @@ def clean_and_predict(player_id,minutes):
             injury[2] = injury[4]
             injury.pop()
             injury.pop()
-            print(injury)
         
         player_details.extend([injury_array,injured])
-        #print(player_details)
+        print(player_details)
         prediction_input = InjuryPrediction.MakePrediction(player_details)
         return prediction_input.prediction()
 
