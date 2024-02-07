@@ -6,7 +6,7 @@ import json
 
 today = date.today()
 
-def clean_and_predict(player_id,minutes):
+def clean_and_predict(player_id,minutes,model):
     player_details = []
     
     #Calculate total minutes played in last month
@@ -20,7 +20,6 @@ def clean_and_predict(player_id,minutes):
     #Calculate player age
     date_of_birth = player.date_of_birth
     age = today.year - date_of_birth.year - ((today.month, today.day) < (date_of_birth.month, date_of_birth.day))
-    print(age)
 
     #Append player info to array
     player_details.extend([player.position, age, player.height, player.weight, getRegion(player.country), total_minutes])
@@ -32,7 +31,7 @@ def clean_and_predict(player_id,minutes):
     if len(injuries) == 0: 
         #If player has had no injuries fill out rest of the details with default values and pass to predictive model
         player_details.extend([0,[],0])
-        prediction_input = InjuryPrediction.MakePrediction(player_details)
+        prediction_input = InjuryPrediction.MakePrediction(player_details,model)
         return prediction_input.prediction()
     
     else:
@@ -54,21 +53,17 @@ def clean_and_predict(player_id,minutes):
           
         #Sorting the injury array based on date, going from closest end date to farthest 
         injury_array = sorted(injury_array, key=lambda x: x[2], reverse=True)
-        #print(injury_array)
 
         #Calculate days since last injured
         days_since_injured = (today - injury_array[0][2]).days
-        #print(days_since_injured)
         player_details.append(days_since_injured)
 
         #Calculate length of injuries
         for injury in injury_array:
             injury_length = (injury[2] - injury[1]).days
             injury.append(injury_length)
-            #print(injury_length)
 
         #Calculate days between injuries
-        print("")
         for i in range(len(injury_array)):
             if i == (len(injury_array)-1):
                 days_between_injuries = 0
@@ -76,7 +71,6 @@ def clean_and_predict(player_id,minutes):
                 continue
             days_between_injuries = (injury_array[i][1] - injury_array[i+1][2]).days
             injury_array[i].append(days_between_injuries)
-            #print(days_between_injuries)
             
         #Replace dates with the days between injuries and length of injuries as this is what the model needs
         for injury in injury_array:
@@ -86,8 +80,7 @@ def clean_and_predict(player_id,minutes):
             injury.pop()
         
         player_details.extend([injury_array,injured])
-        print(player_details)
-        prediction_input = InjuryPrediction.MakePrediction(player_details)
+        prediction_input = InjuryPrediction.MakePrediction(player_details,model)
         return prediction_input.prediction()
 
 #This function takes the country and returns the countries region i.e. Western Europe, Northern African, etc.

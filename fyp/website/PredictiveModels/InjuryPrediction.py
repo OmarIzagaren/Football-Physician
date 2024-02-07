@@ -6,11 +6,37 @@ import pandas as pd
 random_forest = joblib.load("./website/PredictiveModels/random_forest_3.joblib")
 StackingModel = joblib.load("./website/PredictiveModels/StackingModel.joblib")
 StackingModelWithDT = joblib.load("./website/PredictiveModels/StackingModelDT.joblib")
+
+#Very similar/the same as svc_poly, depending on number of injuries and whether the player is currently injured minutes played either has no effect
+#or has a very large effect
+svc_rbf = joblib.load("./website/PredictiveModels/svc_rbf_model.joblib")
+#Not affected by minutes played, but when currently injured heavily affected, also affected by number of injuries
+#Some interesting behaviour in terms of predictions given, but on the most part these predictions make sense
+svc_poly = joblib.load("./website/PredictiveModels/svm_model_discrete_poly.joblib")
+#Best and most well rounded
+svr_rbf = joblib.load("./website/PredictiveModels/svm_rbf_model.joblib")
+#Slight bias on minutes played/ good for currently injured players
+svr_poly = joblib.load("./website/PredictiveModels/svm_poly_model.joblib")
+
 #Age,Height,Weight,dsli,gpm,avgMins,median_dbi,avg_loi,mode_is,avg_aoi,noi,injured,Attack,Defender,Goalkeeper,midfield,Caribbean,Central America,Eastern Africa,Eastern Asia,Eastern Europe,Middle Africa,Northern Africa,Northern America,Northern Europe,South America,Southern Africa,Southern Europe,Western Africa,Western Asia,Western Europe
 injuriesDictionary ={'ankle problems': 3, 'broken kneecap': 8, 'patellar tendon rupture': 7, 'knee injury': 7, 'cruciate ligament tear': 10, 'patellar tendon dislocation': 6, 'cruciate ligament strain': 6, 'patellar tendinopathy syndrome': 5, 'knee collateral ligament tear': 8, 'ligament tear': 7, 'outer ligament tear': 6, 'knee medial ligament tear': 7, 'internal ligament strain': 5, 'cruciate ligament injury': 7, 'torn lateral knee ligament': 7, 'inner ligament tear in ankle joint': 5, 'outer ligament problems': 4, 'ankle ligament tear': 5, 'leg injury': 2, 'achilles tendon rupture': 6, 'ligament stretching': 3, 'broken ankle': 6, 'collateral ligament tear': 9, 'internal ligament tear': 7, 'ankle injury':4 , 'tendon tear': 5, 'inner ankle ligament tear': 5, 'broken leg': 8.5, 'syndesmotic ligament tear': 4, 'inflammation in the ankle joint': 4, 'torn ligaments in the tarsus': 6, 'torn ligaments': 7, 'partial damage to the cruciate ligament': 6, 'edema in the knee': 2, 'double ligament tear': 7, 'ligament injury': 5, 'inner knee ligament tear': 8, 'inflammation of ligaments in the knee': 6, 'collateral ankle ligament tear': 5, 'injury to the ankle': 4, 'patellar tendon tear': 5, 'bruise on ankle': 2, 'ankle sprain': 4, 'inner ligament stretch of the knee': 4, 'capsular tear of ankle joint': 4.5, 'inflammation of the biceps tendon in the thigh': 3, 'collateral ligament injury': 6, 'overstretching of the syndesmotic ligament': 1, 'knee collateral ligament strain': 4, 'torn knee ligaments': 7.5, ' achilles tendon contusion': 2,'achilles tendon irritation': 1, 'ankle surgery': 6, 'tendon irritation': 2, 'tendon rupture': 5, 'torn lateral ankle ligament': 5, 'cyst in the knee': 3, 'partial patellar tendon tear': 4.5, 'inflammation in the knee': 3.5, 'torn ankle ligaments': 5, 'inner ligament injury': 5, 'bruised knee': 1, 'cruciate ligament surgery': 10, 'tendonitis': 2, 'patellar tendon irritation': 1.5, 'longitudinal tendon tear': 5, 'knee surgery': 8.5, 'dislocation fracture of the ankle joint': 7, 'achilles tendon surgery': 4, 'achilles tendon problems': 2, 'knee problems': 5, 'dislocation of the kneecap': 7, 'peroneus tendon injury': 3, 'bruise on the ankle joint': 2, 'knee bruise': 1, 'syndesmosis ligament tear': 3, 'lower leg fracture': 5, 'patellar tendon problems': 3.5}
 
 class MakePrediction:
-    def __init__(self,input_array):
+    def __init__(self,input_array,selected_model):
+        print(selected_model)
+        if selected_model == "svc_rbf":
+            self.is_classifier = True
+            self.model = svc_rbf
+        elif selected_model == "svc_poly":
+            self.is_classifier = True
+            self.model = svc_poly
+        elif selected_model == "svr_rbf":
+            self.is_classifier = False
+            self.model = svr_rbf
+        else: 
+            self.is_classifier = False
+            self.model = svr_poly
+
         self.input_array = input_array
         self.clean_input()
     
@@ -108,6 +134,9 @@ class MakePrediction:
     
     def prediction(self):
         #print(self.input_array)
+        self.input_array[0] = np.log(self.input_array[0] +1)
+        self.input_array[1] = np.log(self.input_array[1] +1)
+        self.input_array[2] = np.log(self.input_array[2] +1)
         self.input_array[3] = np.log(self.input_array[3] +1)
         self.input_array[4] = np.log(self.input_array[4] +1)
         self.input_array[6] = np.log(self.input_array[6] +1)
@@ -120,28 +149,50 @@ class MakePrediction:
         final_array = pd.DataFrame([self.input_array])
         final_array.columns = ['Age','Height','Weight','dsli','mins','median_dbi','avg_loi','mode_is','avg_aoi','noi','injured','Attack','Defender','Goalkeeper','midfield','Caribbean','Central America','Eastern Africa','Eastern Asia','Eastern Europe','Middle Africa','Northern Africa','Northern America','Northern Europe','South America','Southern Africa','Southern Europe','Western Africa','Western Asia','Western Europe']
         #print([final_array])
-        final_percentage = StackingModelWithDT.predict(final_array)
+        final_percentage = self.model.predict(final_array)
+        print("")
         print(final_percentage)
+        print("")
 
-        if final_percentage <= 10:
-            return "Very Low Risk"
+        if self.is_classifier:
+            if final_percentage == 0:
+                return "Very Low Risk"
+            
+            elif final_percentage == 1:
+                return "Low Risk"
+            
+            elif final_percentage == 2:
+                return "Moderate Risk"
+            
+            elif final_percentage == 3:
+                return "High Risk"
+            
+            elif final_percentage == 4:
+                return "Very High Risk"
+            
+            elif final_percentage == 5:
+                return "Extreme Risk"
+            
+        else:
+            if final_percentage <= 10:
+                return "Very Low Risk"
         
-        elif 10 < final_percentage <= 30:
-            return "Low Risk"
-        
-        elif 30 < final_percentage <= 55:
-            return "Moderate Risk"
-        
-        elif 55 < final_percentage <= 75:
-            return "High Risk"
-        
-        elif 75 < final_percentage <= 90:
-            return "Very High Risk"
-        
-        elif 90 < final_percentage:
-            return "Extreme Risk"
+            elif 10 < final_percentage <= 30:
+                return "Low Risk"
+            
+            elif 30 < final_percentage <= 55:
+                return "Moderate Risk"
+            
+            elif 55 < final_percentage <= 70:
+                return "High Risk"
+            
+            elif 70 < final_percentage <= 90:
+                return "Very High Risk"
+            
+            elif 90 < final_percentage:
+                return "Extreme Risk"
 
-array = ['Defender',25,188,78,'Western Europe',300,500,[['Cruciate ligament tear', 20, 180, 26],['Ankle injury', 1920, 72, 26], ['Inner knee ligament tear', 0, 59, 26]],1]
+#array = ['Defender',25,188,78,'Western Europe',300,500,[['Cruciate ligament tear', 20, 180, 26],['Ankle injury', 1920, 72, 26], ['Inner knee ligament tear', 0, 59, 26]],1]
 
 #input = MakePrediction(array)
 #print(input.prediction())

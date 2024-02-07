@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>ACL injury scan</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input class="form-control" type="file" name="image" accept="image/*" required>
+    <button type="submit" class="btn btn-outline-primary">Upload Image</button>
+</form>
+
+{% endblock %}

@@ -8,11 +8,15 @@
     <select class="form-control" id="playersDropdown">
         <option value="no player">Select a player...</option>
       {% for player in players %}
-        <option value="{{ player.id }}">{{ player }}</option>
+        <option value="{{ player.id }}">{{ player}}</option>
       {% endfor %}
     </select>
   
 {% endif %}
+</br>
+<table class="table table-striped">
+    <tbody id="detailsContainer"></tbody>
+</table>
 
 <h1>Injuries</h1>
     <table class="table table-striped">
@@ -25,24 +29,43 @@
     document.addEventListener('DOMContentLoaded', function() {
         var dropdown = document.getElementById('playersDropdown');
         var displayInjuries = document.getElementById('injuriesContainer');
+        var displayDetails = document.getElementById('detailsContainer');
     
         dropdown.addEventListener('change', function() {
             var selectedPlayer = dropdown.value;
         
             if (selectedPlayer == "no player") {
                 displayInjuries.innerHTML = "";
+                displayDetails.innerHTML = "";
             } 
             else {
-                var xhr = new XMLHttpRequest();
+                var xhr_injuries = new XMLHttpRequest();
     
-                xhr.open('GET', 'get_player_injuries/?selected_player=' + encodeURIComponent(selectedPlayer), true);
+                xhr_injuries.open('GET', 'get_player_injuries/?selected_player=' + encodeURIComponent(selectedPlayer), true);
     
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        displayInjuries.innerHTML = xhr.responseText;
+                xhr_injuries.onreadystatechange = function() {
+                    if (xhr_injuries.readyState === 4 && xhr_injuries.status === 200) {
+                        displayInjuries.innerHTML = xhr_injuries.responseText;
                     }
                 };
-                xhr.send();
+                xhr_injuries.send();
+
+                var xhr_details = new XMLHttpRequest();
+    
+                xhr_details.open('GET', 'get_player_details/?selected_player=' + encodeURIComponent(selectedPlayer), true);
+    
+                xhr_details.onreadystatechange = function() {
+                    if (xhr_details.readyState === 4 && xhr_details.status === 200) {
+                        displayDetails.innerHTML = xhr_details.responseText;
+                        var removeButton = document.createElement('button');
+                        removeButton.type = 'button';
+                        removeButton.className = 'btn btn-danger';
+                        removeButton.textContent = 'Remove Player';
+                        displayDetails.appendChild(removeButton);
+                    }
+                };
+                xhr_details.send();
+
             }
         });
     });

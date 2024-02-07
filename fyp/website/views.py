@@ -154,6 +154,39 @@ def get_player_injuries(request):
 
     return HttpResponse(injuries_html)
 
+def get_player_details(request):
+    selected_player = request.GET.get('selected_player', None)
+    player_details = Player.objects.filter(id=selected_player).first()
+    details_html = ''
+    details_html += (
+        f'<tr>'
+        f'<th>Full Name:</th>'
+        f'<td>{player_details.first_name} {player_details.last_name}</td>'
+        f'</tr>'
+        f'<tr>'
+        f'<th>Position:</th>'
+        f'<td>{player_details.position}</td>'
+        f'</tr>'
+        f'<tr>'
+        f'<th>Date of Birth:</th>'
+        f'<td>{player_details.date_of_birth}</td>'
+        f'</tr>'
+        f'<tr>'
+        f'<th>Height(cm):</th>'
+        f'<td>{player_details.height}</td>'
+        f'</tr>'
+        f'<tr>'
+        f'<th>Weight(kg):</th>'
+        f'<td>{player_details.weight}</td>'
+        f'</tr>'
+        f'<tr>'
+        f'<th>Country:</th>'
+        f'<td>{player_details.country}</td>'
+        f'</tr>'
+        f'</br>'
+    )
+    return HttpResponse(details_html)
+
 def predict_injury(request):
     if request.user.is_authenticated:
         players = Player.objects.filter(user=request.user)
@@ -161,12 +194,16 @@ def predict_injury(request):
             form = request.POST
             player_id = form.get('player')
             games = form.getlist('games[]')
-            injury_risk_prediction = clean_and_predict(player_id, games)
+            model = form.get('model')
+            print("IDWQIDWQIDWQIDWQ")
             print(form)
-            print(games)
+            injury_risk_prediction = clean_and_predict(player_id, games, model)
             #print(injury_risk_prediction)
-            return render(request, 'injury_prediction.html', {'players': players, 'form':form, 'games':games,'injury_risk_prediction': injury_risk_prediction})
+            return render(request, 'injury_prediction.html', {'model':model, 'player_id':player_id, 'players': players, 'form':form, 'games':games,'injury_risk_prediction': injury_risk_prediction})
     else: 
         messages.error(request, "Not logged in")
         return redirect('home')
     return render(request, 'injury_prediction.html', {'players': players})
+
+def detect_acl(request): 
+    return render(request, 'injury_scan_acl.html', {})
