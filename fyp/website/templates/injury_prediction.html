@@ -90,9 +90,12 @@
         <div class="card" style="width: 22rem;">
             <div class="card-body">
             <div id="modelInfoContainer">
+            {% if model %}
+            {% else %}
               <h5 class="card-title">SVR RBF Model</h5>
               <h6 class="card-subtitle mb-2 text-muted">Support Vector Regression with Radial Basis Function kernel</h6>
               <p class="card-text"> The most well-rounded model for predicting the risk of injury, considers all factors when making a prediction.</p>
+            {% endif %}
             </div>
             </div>
           </div>
@@ -115,36 +118,58 @@
 
 {% if injury_risk_prediction %}
 <br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
     <div class="card" id="prediction">
         <div class="card-body">
             {{ injury_risk_prediction }}
         </div>
       </div>
 <br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
+
 {% endif %}
 
 <script>
-    if (document.getElementById('prediction')) {
-        document.getElementById('prediction').scrollIntoView({ behavior: 'smooth' });
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
         const radioContainer = document.getElementById('radios');
         const checkedRadioButton = document.querySelector('input[type="radio"]:checked');
         var displayModelInfo = document.getElementById('modelInfoContainer');
+
+        function updateModelInfo() {
+            const checkedRadioButton = document.querySelector('input[type="radio"]:checked');
+    
+            if (checkedRadioButton.id == "option1") {
+                displayModelInfo.innerHTML = `
+                <h5 class="card-title">SVR RBF Model</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Support Vector Regression with Radial Basis Function kernel</h6>
+                <p class="card-text">The most well-rounded model for predicting the risk of injury, considers all factors when making a prediction.</p>
+                `;
+            }
+            else if (checkedRadioButton.id == "option2") {
+                displayModelInfo.innerHTML = `
+                <h5 class="card-title">SVR Poly Model</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Support Vector Regression with Polynomial Function kernel</h6>
+                <p class="card-text">This model shows a slight bias towards minutes played and is particularly 
+                    effective for predicting injury likelihood among currently injured players.</p>
+                `;
+            }
+            else if (checkedRadioButton.id == "option3") {
+                displayModelInfo.innerHTML = `
+                <h5 class="card-title">SVC RBF Model</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Support Vector Classifier with Radial Basis Function kernel</h6>
+                <p class="card-text">This model's behavior varies based on the number of injuries and current injury status. 
+                    Dependant on those factors, minutes played may have no effect or a significant effect on predictions.</p>
+                `;
+            }
+            else{
+                displayModelInfo.innerHTML = `
+                <h5 class="card-title">SVC Poly Model</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Support Vector Classifier with Polynomial Function kernel</h6>
+                <p class="card-text">This model's behavior varies based on the number of injuries and current injury status. 
+                    Dependant on those factors, minutes played may have no effect or a significant effect on predictions.</p>
+                `;
+            }
+        }
         
+        updateModelInfo();
 
         radioContainer.addEventListener('change', function(event) {
             const checkedRadioButton = document.querySelector('input[type="radio"]:checked');
@@ -184,6 +209,13 @@
         });
 
     });
+
+    window.onload = function() {
+        if (document.getElementById('prediction')) {
+            document.getElementById('prediction').scrollIntoView({ behavior: 'smooth' });
+        }
+      };
 </script>
+
 
 {% endblock %}

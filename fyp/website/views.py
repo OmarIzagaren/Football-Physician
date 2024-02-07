@@ -195,8 +195,6 @@ def predict_injury(request):
             player_id = form.get('player')
             games = form.getlist('games[]')
             model = form.get('model')
-            print("IDWQIDWQIDWQIDWQ")
-            print(form)
             injury_risk_prediction = clean_and_predict(player_id, games, model)
             #print(injury_risk_prediction)
             return render(request, 'injury_prediction.html', {'model':model, 'player_id':player_id, 'players': players, 'form':form, 'games':games,'injury_risk_prediction': injury_risk_prediction})
