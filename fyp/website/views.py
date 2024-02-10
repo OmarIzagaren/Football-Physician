@@ -7,6 +7,8 @@ from .models import Player, Injury
 from django.http import HttpResponse
 from datetime import date
 from .predictions import clean_and_predict
+import requests
+from roboflow import Roboflow
 
 
 
@@ -203,5 +205,51 @@ def predict_injury(request):
         return redirect('home')
     return render(request, 'injury_prediction.html', {'players': players})
 
-def detect_acl(request): 
+from django.core.files.uploadedfile import TemporaryUploadedFile
+import os
+import tempfile
+import base64
+
+def detect_acl(request):
+    if request.user.is_authenticated: 
+        if request.method == 'POST' and request.FILES['image']:
+            image_file = request.FILES['image']
+            temp_file = tempfile.NamedTemporaryFile(delete=False)
+
+            try:
+                for chunk in image_file.chunks():
+                    temp_file.write(chunk)
+
+                temp_file_path = temp_file.name  # Get the temporary file path
+                temp_file.seek(0)  # Ensure that the file cursor is at the beginning of the file
+
+                rf = Roboflow(api_key="UNYXpfLbL0acg3VBqsJ4")
+                project = rf.workspace().project("classification-of-acl-injuriesv-v9dlc")
+                model = project.version(6).model
+                mri_prediction = model.predict(temp_file_path, confidence=50, overlap=30).json()
+                try:
+                    injury_class = mri_prediction['predictions'][0]['class']
+                    if injury_class == "healthy":
+                        injury_class = "Healthy ACL"
+                    elif injury_class == "partially_injured":
+                        injury_class = "Partially Injured ACL"
+                    else:
+                        injury_class = "Completely Ruptured ACL"
+                except: 
+                    injury_class = "Invalid image"
+
+
+                temp_file.seek(0)  # Ensure the file cursor is at the beginning
+                base64_img = base64.b64encode(temp_file.read()).decode('utf-8')
+                image_url = f'data:image/jpeg;base64,{base64_img}'
+
+            finally:
+                temp_file.close()  # Close the temporary file
+                os.unlink(temp_file_path)  # Delete the temporary file
+            
+            return render(request, 'injury_scan_acl.html', {'image':image_url,'img_name':image_file, 'injury':injury_class})
+    else: 
+        messages.error(request, "Not logged in")
+        return redirect('home')
+
     return render(request, 'injury_scan_acl.html', {})

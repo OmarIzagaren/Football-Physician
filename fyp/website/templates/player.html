@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class = "col-md-6 offset-md-3">
-<h1>Player</h1>
+<h1>Create Player</h1>
 <form method="POST">
     {% csrf_token %}
     {% if errors_list %}
@@ -20,38 +20,39 @@
         {{ form.first_name }}
         <label for="floatingInput">First Name</label>
     </div>
-        </br>
+    <br/>
     <div class="form-floating">
         {{ form.last_name }}
         <label for="floatingInput">Last Name</label>
     </div>
-        </br>
+    <br/>
     <div class="col-auto my-1">
         {{ form.position }}
     </div>
-        </br>
+    <br/>
     <div class="form-floating">
         {{ form.date_of_birth }}
         <label for="floatingInput">Date of Birth</label>
     </div>
-        </br>
+    <br/>
     <div class="form-floating">
         {{ form.height }}
         <label for="floatingInput">Height (cm)</label>
     </div>
-        </br>
+    <br/>
     <div class="form-floating">
         {{ form.weight }}
         <label for="floatingInput">Weight (kg)</label>
     </div>
-        </br>
+    <br/>
     <div class="col-auto my-1">
         {{ form.country }}
     </div>
-        </br>
+    <br/>
 
     <button type="submit" class="btn btn-outline-primary">Register</button>
 </form>
+<br/>
 </div>
 
 {% endblock %}

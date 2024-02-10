@@ -75,7 +75,7 @@ class PlayerForm(forms.ModelForm):
 
 
 class InjuryForm(forms.ModelForm):
-    player = forms.ModelChoiceField(queryset=Player.objects.none(),required=True,label="",widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Player'}))
+    player = forms.ModelChoiceField(queryset=Player.objects.none(),required=True,label="",empty_label="Select a player...",widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Player'}))
     injury = forms.CharField(required=True,label="", max_length=50, widget=forms.Select(choices=injuries,attrs={'class':'form-control', 'placeholder':'Injury'}))
     injury_start_date = forms.DateField(required=True,label="", widget=forms.DateInput(attrs={'class':'form-control','type':'date', 'placeholder':'Injury Start Date'}))
     injury_end_date = forms.DateField(required=False,label="", widget=forms.DateInput(attrs={'class':'form-control','type':'date' ,'placeholder':'Injury End Date'}))

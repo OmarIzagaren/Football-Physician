@@ -139,12 +139,11 @@ class MakePrediction:
         self.input_array[2] = np.log(self.input_array[2] +1)
         self.input_array[3] = np.log(self.input_array[3] +1)
         self.input_array[4] = np.log(self.input_array[4] +1)
+        self.input_array[5] = np.log(self.input_array[5] +1)
         self.input_array[6] = np.log(self.input_array[6] +1)
-        #self.input_array[5] = np.log(self.input_array[5] +1)
         self.input_array[7] = np.log(self.input_array[7] +1)
         self.input_array[8] = np.log(self.input_array[8] +1)
         self.input_array[9] = np.log(self.input_array[9] +1)
-        self.input_array[5] = np.log(self.input_array[5] +1)
 
         final_array = pd.DataFrame([self.input_array])
         final_array.columns = ['Age','Height','Weight','dsli','mins','median_dbi','avg_loi','mode_is','avg_aoi','noi','injured','Attack','Defender','Goalkeeper','midfield','Caribbean','Central America','Eastern Africa','Eastern Asia','Eastern Europe','Middle Africa','Northern Africa','Northern America','Northern Europe','South America','Southern Africa','Southern Europe','Western Africa','Western Asia','Western Europe']
