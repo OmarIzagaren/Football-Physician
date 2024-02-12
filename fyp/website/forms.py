@@ -86,9 +86,12 @@ class InjuryForm(forms.ModelForm):
         model = Injury
         fields = ('player','injury','injury_start_date','injury_end_date','injury_age','injured')
     
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        print("User passed to form:", user)
         super().__init__(*args, **kwargs)
         players = Player.objects.filter(user=user)
+        print(players)
         self.fields['injury_start_date'].widget.attrs['max'] = str(date.today())
         self.fields['injury_end_date'].widget.attrs['max'] = str(date.today())
 

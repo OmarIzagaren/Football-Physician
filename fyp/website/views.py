@@ -86,11 +86,12 @@ def player_details(request):
 
 
 def injury_details(request):
+    title = 'Add Injury'
     if request.user.is_authenticated:
         try:
             form = InjuryForm(user=request.user)
             if request.method == 'POST':
-                form = InjuryForm(request.user, request.POST)
+                form = InjuryForm(request.POST, user=request.user)
                 
                 if form.is_valid():
                     form.save()
@@ -103,7 +104,7 @@ def injury_details(request):
                         if field.errors: 
                             errors_list.append(field.errors)
                 form.errors.clear()
-                return render(request, 'add_injury.html', {'form':form, 'errors_list':errors_list})
+                return render(request, 'add_injury.html', {'form':form, 'errors_list':errors_list, 'title': title})
         except ValidationError as e:
             messages.error(request, str(e))
             return redirect('player')
@@ -111,8 +112,7 @@ def injury_details(request):
         messages.error(request, "Not logged in")
         return redirect('home')
 
-
-    return render(request, 'add_injury.html', {'form': form})
+    return render(request, 'add_injury.html', {'form': form, 'title': title})
 
 def player_view(request):
     if request.user.is_authenticated:
@@ -136,6 +136,7 @@ def get_player_injuries(request):
         f'<th scope="col">Date Injured</th>'
         f'<th scope="col">Date Recovered</th>'
         f'<th scope="col">Age of Injury</th>'
+        f'<th scope="col">Action</th>'
         f'</tr>'
         f'</thead>'
     )
@@ -148,12 +149,14 @@ def get_player_injuries(request):
         else: 
             row_class = ""
 
+        edit_url = reverse('edit_injury', args=[injury.id])
         injuries_html += (
             f'<tr class="{row_class}">'
             f'<td>{injury.injury}</td>'
             f'<td>{injury.injury_start_date}</td>'
             f'<td>{end_date}</td>'
             f'<td>{injury.injury_age}</td>'
+            f'<td><a href="{edit_url}" class="btn btn-outline-secondary btn-sm">Edit Injury</a></td>'
             f'</tr>'
         )
     
@@ -161,6 +164,27 @@ def get_player_injuries(request):
         return HttpResponse("This player has no injuries.")
 
     return HttpResponse(injuries_html)
+
+def edit_injury(request,injury_id):
+    injury = Injury.objects.get(id=injury_id) 
+    title = 'Edit Injury'
+    if request.method == 'POST':
+        form = InjuryForm(request.POST, instance=injury, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Successfully edited injury')
+            return redirect('view_player')
+        errors_list = []
+        if form.errors:
+            for field in form:
+                if field.errors: 
+                    errors_list.append(field.errors)
+        form.errors.clear()
+        return render(request, 'add_injury.html', {'form':form, 'errors_list':errors_list, 'title': title})
+    else:
+        form = InjuryForm(instance=injury, user=request.user)
+
+    return render(request, 'add_injury.html', {'form': form, 'title': title})
 
 def get_player_details(request):
     selected_player = request.GET.get('selected_player', None)
