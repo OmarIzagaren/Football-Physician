@@ -1,16 +1,19 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib import messages
-from .forms import SignUpForm, PlayerForm, InjuryForm
 from django.core.exceptions import ValidationError
-from .models import Player, Injury
 from django.http import HttpResponse
+from django.urls import reverse
+from django.core.files.uploadedfile import TemporaryUploadedFile
+
 from datetime import date
+import os
+import tempfile
+import base64
 from .predictions import clean_and_predict
-import requests
+from .forms import SignUpForm, PlayerForm, InjuryForm
+from .models import Player, Injury
 from roboflow import Roboflow
-
-
 
 
 def home(request): 
@@ -114,6 +117,9 @@ def injury_details(request):
 def player_view(request):
     if request.user.is_authenticated:
         players = Player.objects.filter(user=request.user)
+        if players.count() == 0: 
+            messages.error(request,'No players existing, create a player first.')
+            return redirect('player')
         return render(request, 'view_player.html', {'players': players})
     else: 
         messages.error(request, "Not logged in")
@@ -189,6 +195,18 @@ def get_player_details(request):
     )
     return HttpResponse(details_html)
 
+def delete_player(request):
+    player_id = request.POST.get('player_id')
+    player_count = Player.objects.filter(user=request.user).count()
+    delete_player = Player.objects.filter(id=player_id).first()
+    delete_player.delete()
+    if player_count == 1:
+        redirect_url = reverse('home')
+    else:
+        redirect_url = reverse('view_player')
+    messages.success(request, "Player successfully deleted.")
+    return HttpResponse(redirect_url)
+
 def predict_injury(request):
     if request.user.is_authenticated:
         players = Player.objects.filter(user=request.user)
@@ -205,10 +223,6 @@ def predict_injury(request):
         return redirect('home')
     return render(request, 'injury_prediction.html', {'players': players})
 
-from django.core.files.uploadedfile import TemporaryUploadedFile
-import os
-import tempfile
-import base64
 
 def detect_acl(request):
     if request.user.is_authenticated: 
