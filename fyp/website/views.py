@@ -180,11 +180,11 @@ def edit_injury(request,injury_id):
                 if field.errors: 
                     errors_list.append(field.errors)
         form.errors.clear()
-        return render(request, 'add_injury.html', {'form':form, 'errors_list':errors_list, 'title': title})
+        return render(request, 'add_injury.html', {'form':form, 'errors_list':errors_list, 'title': title, 'injury_id': injury_id})
     else:
         form = InjuryForm(instance=injury, user=request.user)
 
-    return render(request, 'add_injury.html', {'form': form, 'title': title})
+    return render(request, 'add_injury.html', {'form': form, 'title': title, 'injury_id': injury_id})
 
 def get_player_details(request):
     selected_player = request.GET.get('selected_player', None)
@@ -229,6 +229,13 @@ def delete_player(request):
     else:
         redirect_url = reverse('view_player')
     messages.success(request, "Player successfully deleted.")
+    return HttpResponse(redirect_url)
+
+def delete_injury(request,id):
+    delete_injury = Injury.objects.filter(id=id).first()
+    delete_injury.delete()
+    redirect_url = reverse('view_player')
+    messages.success(request, "Injury successfully deleted.")
     return HttpResponse(redirect_url)
 
 def predict_injury(request):

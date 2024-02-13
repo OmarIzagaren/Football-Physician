@@ -50,7 +50,11 @@
         var displayDetails = document.getElementById('detailsContainer');
         var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        dropdown.addEventListener('change', function() {
+        handleDropdownChange();
+
+        dropdown.addEventListener('change', handleDropdownChange);
+
+        function handleDropdownChange() {
             var selectedPlayer = dropdown.value;
         
             if (selectedPlayer == "no player") {
@@ -86,7 +90,7 @@
                 };
                 xhr_details.send();
             }
-        });
+        };
 
         displayDetails.addEventListener('click',function(event){
             var target = event.target;
