@@ -27,17 +27,17 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request,user)
-            messages.success(request, "Logged in")
+            messages.success(request, "Successfully logged in.")
             return redirect('home')
         else:
-            messages.success(request, "Invalid user")
+            messages.success(request, "Invalid user.")
             return redirect('login')
     else:
         return render(request, 'login.html', {})
 
 def logout_user(request): 
     logout(request)
-    messages.success(request, "Logged out")
+    messages.success(request, "Successfully logged out.")
     return redirect('home')
 
 def register_user(request): 
@@ -49,7 +49,7 @@ def register_user(request):
             password = form.cleaned_data['password1']
             user = authenticate(request, username=username, password=password)
             login(request,user)
-            messages.success(request, "Successfully registered")
+            messages.success(request, "Successfully registered.")
             return redirect('home')
     else:
         form = SignUpForm()
@@ -71,7 +71,7 @@ def player_details(request):
                 add_player.user = request.user
                 add_player.user_id = request.user.id
                 add_player.save()
-                messages.success(request, "Successfully registered")
+                messages.success(request, "Player successfully registered.")
                 return redirect('home')
         errors_list = []
         if form.errors:
@@ -81,7 +81,7 @@ def player_details(request):
         form.errors.clear()
         return render(request, 'player.html', {'form':form, 'errors_list':errors_list})
     else: 
-        messages.success(request, "Not logged in")
+        messages.success(request, "You have to log in to access this page.")
         return redirect('home')
 
 
@@ -95,7 +95,7 @@ def injury_details(request):
                 
                 if form.is_valid():
                     form.save()
-                    messages.success(request, "Successfully Added")
+                    messages.success(request, "Injury successfully added.")
                     return redirect('home')
                 
                 errors_list = []
@@ -106,10 +106,14 @@ def injury_details(request):
                 form.errors.clear()
                 return render(request, 'add_injury.html', {'form':form, 'errors_list':errors_list, 'title': title})
         except ValidationError as e:
-            messages.error(request, str(e))
+            error_message = str(e)
+            error_message = error_message.replace("'",'')
+            error_message = error_message.replace("[",'')
+            error_message = error_message.replace("]",'')
+            messages.error(request, error_message)
             return redirect('player')
     else: 
-        messages.error(request, "Not logged in")
+        messages.error(request, "You have to log in to access this page.")
         return redirect('home')
 
     return render(request, 'add_injury.html', {'form': form, 'title': title})
@@ -118,11 +122,11 @@ def player_view(request):
     if request.user.is_authenticated:
         players = Player.objects.filter(user=request.user)
         if players.count() == 0: 
-            messages.error(request,'No players existing, create a player first.')
+            messages.error(request,'A player has to be created before you can access this page.')
             return redirect('player')
         return render(request, 'view_player.html', {'players': players})
     else: 
-        messages.error(request, "Not logged in")
+        messages.error(request, "Not logged in.")
         return redirect('home')
 
 def get_player_injuries(request):
@@ -172,7 +176,7 @@ def edit_injury(request,injury_id):
         form = InjuryForm(request.POST, instance=injury, user=request.user)
         if form.is_valid():
             form.save()
-            messages.success(request,'Successfully edited injury')
+            messages.success(request,'Injury successfully edited.')
             return redirect('view_player')
         errors_list = []
         if form.errors:
@@ -250,7 +254,7 @@ def predict_injury(request):
             #print(injury_risk_prediction)
             return render(request, 'injury_prediction.html', {'model':model, 'player_id':player_id, 'players': players, 'form':form, 'games':games,'injury_risk_prediction': injury_risk_prediction})
     else: 
-        messages.error(request, "Not logged in")
+        messages.error(request, "You have to log in to access this page.")
         return redirect('home')
     return render(request, 'injury_prediction.html', {'players': players})
 
@@ -294,7 +298,7 @@ def detect_acl(request):
             
             return render(request, 'injury_scan_acl.html', {'image':image_url,'img_name':image_file, 'injury':injury_class})
     else: 
-        messages.error(request, "Not logged in")
+        messages.error(request, "You have to log in to access this page.")
         return redirect('home')
 
     return render(request, 'injury_scan_acl.html', {})

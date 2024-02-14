@@ -8,11 +8,10 @@ class SignUpForm(UserCreationForm):
     email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
     first_name = forms.CharField(label="", max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
     last_name = forms.CharField(label="", max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
-    is_business_user = forms.BooleanField(required=False)
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2','is_business_user')
+        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
 
 
     def __init__(self, *args, **kwargs):

@@ -50,12 +50,13 @@
         var displayDetails = document.getElementById('detailsContainer');
         var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        handleDropdownChange();
+        setTimeout(handleDropdownChange,1);
 
         dropdown.addEventListener('change', handleDropdownChange);
 
         function handleDropdownChange() {
             var selectedPlayer = dropdown.value;
+            console.log(selectedPlayer)
         
             if (selectedPlayer == "no player") {
                 displayInjuries.innerHTML = "";

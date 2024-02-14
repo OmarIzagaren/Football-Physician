@@ -3,9 +3,9 @@
 {% block content %}
 
 <div class = "col-md-6 offset-md-3">
-</br>
+	<br/>
 <h1>Register</h1>
-</br>
+<br/>
 <form method="POST">
     {% csrf_token %}
 
@@ -20,8 +20,9 @@
 		
 	{% endif %}
     {{ form.as_p }}
-    </br>
+		<br/>
     <button type="submit" class="btn btn-outline-primary">Register</button>
 </form>
+<br/>
 
 {% endblock %}
