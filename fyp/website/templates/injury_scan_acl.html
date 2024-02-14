@@ -5,10 +5,16 @@
 <div class="row">
     <div class="col-md-3">
         <h1>ACL injury scan</h1>
+        <br/>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <input style="display:none" class="form-control" id="imageInput" type="file" name="image" accept="image/*" required>
             <button type="button" id="customButton" class="btn btn-secondary">Choose File</button>
+            {% if img_name %}
+            <span id="fileName">{{img_name}}</span>
+            {% else %}
+            <span id="fileName">No file chosen</span>
+            {% endif %}
             <br/>
             <br/>
             <div id="imagePreview">
@@ -16,11 +22,6 @@
                 <img src="{{ image }}" alt="Prepopulated Image" style="max-width: 100%; max-height: 200px;">
                 {% endif %}
             </div>
-            {% if img_name %}
-            <span id="fileName">{{img_name}}</span>
-            {% else %}
-            <span id="fileName">No file chosen</span>
-            {% endif %}
             <br/>
             <br/>
             <button type="submit" class="btn btn-outline-primary">Upload Image</button>

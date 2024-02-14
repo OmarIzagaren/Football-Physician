@@ -17,7 +17,6 @@ from roboflow import Roboflow
 
 
 def home(request): 
-    print("test")
     return render(request, 'home.html', {})
 
 def login_user(request): 
@@ -321,6 +320,7 @@ def detect_acl(request):
                         paragraphs = ruptured_paragraphs
                 except: 
                     injury_class = "Invalid image"
+                    paragraphs = ["","",""]
 
 
                 temp_file.seek(0)  # Ensure the file cursor is at the beginning

@@ -23,7 +23,6 @@ injuriesDictionary ={'ankle problems': 3, 'broken kneecap': 8, 'patellar tendon 
 
 class MakePrediction:
     def __init__(self,input_array,selected_model):
-        print(selected_model)
         if selected_model == "svc_rbf":
             self.is_classifier = True
             self.model = svc_rbf
@@ -121,7 +120,6 @@ class MakePrediction:
     def clean_input(self):
         clean_array =[]
         clean_array=[self.input_array[1],self.input_array[2],self.input_array[3],self.input_array[6],self.input_array[5]]
-        #print(clean_array)
 
         median_dbi,avg_loi,mode_is,avg_aoi,noi = self.calculate_injury_averages(self.input_array[7])
         clean_array.extend([median_dbi,avg_loi,mode_is,avg_aoi,noi,self.input_array[8]])
@@ -129,11 +127,9 @@ class MakePrediction:
         clean_array.extend(self.one_hot_encode_position(self.input_array[0]))
 
         clean_array.extend(self.one_hot_encode_region(self.input_array[4]))
-        #print(clean_array)
         self.input_array = clean_array
     
     def prediction(self):
-        #print(self.input_array)
         self.input_array[0] = np.log(self.input_array[0] +1)
         self.input_array[1] = np.log(self.input_array[1] +1)
         self.input_array[2] = np.log(self.input_array[2] +1)
@@ -147,11 +143,8 @@ class MakePrediction:
 
         final_array = pd.DataFrame([self.input_array])
         final_array.columns = ['Age','Height','Weight','dsli','mins','median_dbi','avg_loi','mode_is','avg_aoi','noi','injured','Attack','Defender','Goalkeeper','midfield','Caribbean','Central America','Eastern Africa','Eastern Asia','Eastern Europe','Middle Africa','Northern Africa','Northern America','Northern Europe','South America','Southern Africa','Southern Europe','Western Africa','Western Asia','Western Europe']
-        #print([final_array])
         final_percentage = self.model.predict(final_array)
-        print("")
-        print(final_percentage)
-        print("")
+        #print(final_percentage)
 
         if self.is_classifier:
             if final_percentage == 0:
@@ -190,8 +183,3 @@ class MakePrediction:
             
             elif 90 < final_percentage:
                 return "Extreme Risk"
-
-#array = ['Defender',25,188,78,'Western Europe',300,500,[['Cruciate ligament tear', 20, 180, 26],['Ankle injury', 1920, 72, 26], ['Inner knee ligament tear', 0, 59, 26]],1]
-
-#input = MakePrediction(array)
-#print(input.prediction())
