@@ -19,27 +19,27 @@
       <div class="row">
         <div class="col-md-4">
           <h2>Get Started Today</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p>Welcome to Football Physician, the gateway to enhanced injury management and prevention. Harnessing data analytics, we offer insights into player well-being and game readiness. Register to build your team profile, enroll players, and monitor their health through our user-friendly dashboard. Gain an edge with tailored reports and practical advice to maintain your players at their best.</p>
           {% if user.is_authenticated %} 
-          <p><a class="btn btn-secondary" href="{% url 'player'%}" role="button">View details »</a></p>
+          <p><a class="btn btn-secondary" href="{% url 'player'%}" role="button">Try now »</a></p>
           {% else %}
           <p><a class="btn btn-secondary" href="{% url 'register'%}" role="button">Register »</a></p>
           {% endif %}
         </div>
         <div class="col-md-4">
           <h2>Prediction</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p>Our predictive analytics tool assesses the risk of injury for each player. By analysing historical data and current performance metrics, we can forecast a players risk of injury. This allows coaches and medical staff to make informed decisions about training loads, recovery times, and game-day readiness. Mitigate risks and optimise your players' performance by utilising our prediction system.</p>
           {% if user.is_authenticated %} 
-          <p><a class="btn btn-secondary" href="{% url 'injury_prediction'%}" role="button">View details »</a></p>
+          <p><a class="btn btn-secondary" href="{% url 'injury_prediction'%}" role="button">Try now »</a></p>
           {% else %}
           <p><a class="btn btn-secondary" href="{% url 'register'%}" role="button">Register »</a></p>
           {% endif %}
         </div>
         <div class="col-md-4">
           <h2>Detection</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p>Designed for immediate and accurate diagnosis without the wait for hospital consultations. Our system allows teams to identify ACL issues promptly, bypassing delays often encountered with external medical evaluations of MRI scans. With this direct access to critical insights, you can initiate tailored recovery plans right away, ensuring swift and informed responses to ACL injuries.</p>
           {% if user.is_authenticated %} 
-          <p><a class="btn btn-secondary" href="{% url 'injury_scan_acl'%}" role="button">View details »</a></p>
+          <p><a class="btn btn-secondary" href="{% url 'injury_scan_acl'%}" role="button">Try now »</a></p>
           {% else %}
           <p><a class="btn btn-secondary" href="{% url 'register'%}" role="button">Register »</a></p>
           {% endif %}

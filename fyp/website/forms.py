@@ -95,7 +95,7 @@ class InjuryForm(forms.ModelForm):
         self.fields['injury_end_date'].widget.attrs['max'] = str(date.today())
 
         if players.count() == 0:
-            raise forms.ValidationError("No player information exists for this account, you must create a player.")
+            raise forms.ValidationError("A player has to be created before you can access this page.")
         elif players.count() == 1:
             self.fields['player'].queryset = players 
             self.fields['player'].initial = players.first()

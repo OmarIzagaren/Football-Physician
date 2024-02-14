@@ -45,10 +45,10 @@
 
 </script>
 
-<div class="container mt-5">
+<div>
     <h1>Injury Prediction</h1>
-    <p>For this section you will need to firstly select a player to predict their likelihood of a knee injury. Once a player is selected
-        you need to input the games they have played <strong>within the last month</strong>, once this is done you can run the prediction.
+    <p>First select a player to predict their risk of a <strong>knee injury</strong>, once a player is selected choose a predictive
+        model to use. Finally, you need to add the games they have played <strong>within the last month</strong>, once this is done you can run the prediction.
     </p>
     
     <form method="POST">
@@ -118,11 +118,59 @@
 
 {% if injury_risk_prediction %}
 <br/>
-    <div class="card" id="prediction">
-        <div class="card-body">
-            {{ injury_risk_prediction }}
+<div class="accordion" id="prediction">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          <strong>Prediction</strong>
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#prediction">
+        <div class="accordion-body">
+          <strong>{{injury_risk_prediction}}</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
         </div>
       </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            <strong>Exercises to avoid</strong>
+        </button>
+      </h2>
+      <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#prediction">
+        <div class="accordion-body">
+          {{ paragraphs.0 }}
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            <strong>Exercises to do</strong>
+        </button>
+      </h2>
+      <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#prediction">
+        <div class="accordion-body">
+            {{ paragraphs.1 }}
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+              <strong>Advice</strong>
+          </button>
+        </h2>
+        <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#prediction">
+          <div class="accordion-body">
+            {{ paragraphs.2 }}
+          </div>
+        </div>
+      </div>
+  </div>
+  </div>
+
+  
 <br/>
 
 {% endif %}
@@ -146,7 +194,7 @@
             else if (checkedRadioButton.id == "option2") {
                 displayModelInfo.innerHTML = `
                 <h5 class="card-title">SVR Poly Model</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Support Vector Regression with Polynomial Function kernel</h6>
+                <h6 class="card-subtitle mb-2 text-muted">Support Vector Regression with Polynomial kernel</h6>
                 <p class="card-text">This model shows a slight bias towards minutes played and is particularly 
                     effective for predicting injury likelihood among currently injured players.</p>
                 `;
@@ -162,7 +210,7 @@
             else{
                 displayModelInfo.innerHTML = `
                 <h5 class="card-title">SVC Poly Model</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Support Vector Classifier with Polynomial Function kernel</h6>
+                <h6 class="card-subtitle mb-2 text-muted">Support Vector Classifier with Polynomial kernel</h6>
                 <p class="card-text">This model's behavior varies based on the number of injuries and current injury status. 
                     Dependant on those factors, minutes played may have no effect or a significant effect on predictions.</p>
                 `;
@@ -184,7 +232,7 @@
             else if (checkedRadioButton.id == "option2") {
                 displayModelInfo.innerHTML = `
                 <h5 class="card-title">SVR Poly Model</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Support Vector Regression with Polynomial Function kernel</h6>
+                <h6 class="card-subtitle mb-2 text-muted">Support Vector Regression with Polynomial kernel</h6>
                 <p class="card-text">This model shows a slight bias towards minutes played and is particularly 
                     effective for predicting injury likelihood among currently injured players.</p>
                 `;
@@ -200,7 +248,7 @@
             else{
                 displayModelInfo.innerHTML = `
                 <h5 class="card-title">SVC Poly Model</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Support Vector Classifier with Polynomial Function kernel</h6>
+                <h6 class="card-subtitle mb-2 text-muted">Support Vector Classifier with Polynomial kernel</h6>
                 <p class="card-text">This model's behavior varies based on the number of injuries and current injury status. 
                     Dependant on those factors, minutes played may have no effect or a significant effect on predictions.</p>
                 `;

@@ -2,27 +2,29 @@
 
 {% block content %}
 <meta name="csrf-token" content="{{ csrf_token }}">
-<h1>Player</h1>
-{% if players %}
-<div class="form-group">
-    <select class="form-control" id="playersDropdown">
-        <option value="no player">Select a player...</option>
-      {% for player in players %}
-        <option value="{{ player.id }}">{{ player}}</option>
-      {% endfor %}
-    </select>
-  
-{% endif %}
-<br/>
-<table class="table table-striped">
-    <tbody id="detailsContainer"></tbody>
-</table>
-
-<h1>Injuries</h1>
+<div>
+    <h1>Player</h1>
+    {% if players %}
+    <div class="form-group">
+        <select class="form-control" id="playersDropdown">
+            <option value="no player">Select a player...</option>
+        {% for player in players %}
+            <option value="{{ player.id }}">{{ player}}</option>
+        {% endfor %}
+        </select>
+    
+    {% endif %}
+    <br/>
     <table class="table table-striped">
-        <tbody id="injuriesContainer"></tbody>
+        <tbody id="detailsContainer"></tbody>
     </table>
-  </div>
+
+    <h1>Injuries</h1>
+        <table class="table table-striped">
+            <tbody id="injuriesContainer"></tbody>
+        </table>
+    </div>
+    </div>
 </div>
 
 <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
