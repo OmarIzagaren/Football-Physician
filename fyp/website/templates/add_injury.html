@@ -87,6 +87,7 @@
         var injuredCheckbox = document.getElementById('id_injured');
         var deleteInjury = document.getElementById('delete_injury');
         var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        console.log(injuredCheckbox)
 
         deleteInjury.addEventListener('click', function(){
             var injuryId = deleteInjury.getAttribute('data-injury-id');
@@ -126,9 +127,12 @@
     
         toggleInjuryEndDateVisibility();
 
+
         injuredCheckbox.addEventListener('change', function () {
+            console.log("HELLOOOOO")
             toggleInjuryEndDateVisibility();
         });
+
 
         function toggleInjuryEndDateVisibility() {
             var injuryEndDateField = document.getElementById('id_injury_end_date');

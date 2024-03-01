@@ -79,7 +79,7 @@ class InjuryForm(forms.ModelForm):
     injury_start_date = forms.DateField(required=True,label="", widget=forms.DateInput(attrs={'class':'form-control','type':'date', 'placeholder':'Injury Start Date'}))
     injury_end_date = forms.DateField(required=False,label="", widget=forms.DateInput(attrs={'class':'form-control','type':'date' ,'placeholder':'Injury End Date'}))
     injury_age = 0
-    injured = forms.BooleanField(required=False)
+    injured = forms.BooleanField(required=False, initial=True)
 
     class Meta: 
         model = Injury

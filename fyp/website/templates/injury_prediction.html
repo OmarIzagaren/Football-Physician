@@ -83,6 +83,9 @@
 
             <input type="radio" class="btn-check" name="model" id="option4" value="svc_poly" {% if model == 'svc_poly' %}checked{% endif %}>
             <label class="btn btn-outline-secondary" for="option4">SVC Poly</label>
+
+            <input type="radio" class="btn-check" name="model" id="option5" value="rfr" {% if model == 'rfr' %}checked{% endif %}>
+            <label class="btn btn-outline-secondary" for="option5">RFR</label>
             
         </div>
         <br/>
@@ -127,7 +130,7 @@
       </h2>
       <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#prediction">
         <div class="accordion-body">
-          <strong>{{injury_risk_prediction}}</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+          Based on the this players information and the details provided they have a <strong>{{injury_risk_prediction}}</strong> of getting injured.
         </div>
       </div>
     </div>
@@ -207,10 +210,18 @@
                     Dependant on those factors, minutes played may have no effect or a significant effect on predictions.</p>
                 `;
             }
-            else{
+            else if (checkedRadioButton.id == "option4"){
                 displayModelInfo.innerHTML = `
                 <h5 class="card-title">SVC Poly Model</h5>
                 <h6 class="card-subtitle mb-2 text-muted">Support Vector Classifier with Polynomial kernel</h6>
+                <p class="card-text">This model's behavior varies based on the number of injuries and current injury status. 
+                    Dependant on those factors, minutes played may have no effect or a significant effect on predictions.</p>
+                `;
+            }
+            else{
+                displayModelInfo.innerHTML = `
+                <h5 class="card-title">RFR Model</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Random Forest Regressor</h6>
                 <p class="card-text">This model's behavior varies based on the number of injuries and current injury status. 
                     Dependant on those factors, minutes played may have no effect or a significant effect on predictions.</p>
                 `;
@@ -245,10 +256,18 @@
                     Dependant on those factors, minutes played may have no effect or a significant effect on predictions.</p>
                 `;
             }
-            else{
+            else if (checkedRadioButton.id == "option4"){
                 displayModelInfo.innerHTML = `
                 <h5 class="card-title">SVC Poly Model</h5>
                 <h6 class="card-subtitle mb-2 text-muted">Support Vector Classifier with Polynomial kernel</h6>
+                <p class="card-text">This model's behavior varies based on the number of injuries and current injury status. 
+                    Dependant on those factors, minutes played may have no effect or a significant effect on predictions.</p>
+                `;
+            }
+            else{
+                displayModelInfo.innerHTML = `
+                <h5 class="card-title">RFR Model</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Random Forest Regressor</h6>
                 <p class="card-text">This model's behavior varies based on the number of injuries and current injury status. 
                     Dependant on those factors, minutes played may have no effect or a significant effect on predictions.</p>
                 `;

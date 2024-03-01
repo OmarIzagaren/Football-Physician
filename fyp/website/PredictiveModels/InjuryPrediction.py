@@ -4,8 +4,6 @@ import numpy as np
 import pandas as pd 
 
 random_forest = joblib.load("./website/PredictiveModels/random_forest_3.joblib")
-StackingModel = joblib.load("./website/PredictiveModels/StackingModel.joblib")
-StackingModelWithDT = joblib.load("./website/PredictiveModels/StackingModelDT.joblib")
 
 #Very similar/the same as svc_poly, depending on number of injuries and whether the player is currently injured minutes played either has no effect
 #or has a very large effect
@@ -32,9 +30,13 @@ class MakePrediction:
         elif selected_model == "svr_rbf":
             self.is_classifier = False
             self.model = svr_rbf
-        else: 
+        elif selected_model == "svr_poly":
             self.is_classifier = False
             self.model = svr_poly
+        else: 
+            self.is_classifier = False
+            print("Hello")
+            self.model = random_forest
 
         self.input_array = input_array
         self.clean_input()
