@@ -78,8 +78,8 @@ class InjuryForm(forms.ModelForm):
     injury = forms.CharField(required=True,label="", max_length=50, widget=forms.Select(choices=injuries,attrs={'class':'form-control', 'placeholder':'Injury'}))
     injury_start_date = forms.DateField(required=True,label="", widget=forms.DateInput(attrs={'class':'form-control','type':'date', 'placeholder':'Injury Start Date'}))
     injury_end_date = forms.DateField(required=False,label="", widget=forms.DateInput(attrs={'class':'form-control','type':'date' ,'placeholder':'Injury End Date'}))
-    injury_age = 0
-    injured = forms.BooleanField(required=False, initial=True)
+    injury_age = forms.IntegerField(widget=forms.HiddenInput(), required=False)
+    injured = forms.BooleanField(required=False, initial=False)
 
     class Meta: 
         model = Injury
@@ -128,7 +128,6 @@ class InjuryForm(forms.ModelForm):
         if player and injury_start_date:
             injury_age = injury_start_date.year - player.date_of_birth.year - ((injury_start_date.month, injury_start_date.day) < (player.date_of_birth.month, player.date_of_birth.day))
             print(injury_age)
-            self.fields['injury_age'] = injury_age
             cleaned_data['injury_age'] = injury_age
 
         print(cleaned_data)

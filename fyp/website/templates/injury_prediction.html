@@ -47,7 +47,7 @@
 
 <div>
     <h1>Injury Prediction</h1>
-    <p>First select a player to predict their risk of a <strong>knee injury</strong>, once a player is selected choose a predictive
+    <p>First select a player to predict their risk of an <strong>ACL injury</strong>, once a player is selected choose a predictive
         model to use. Finally, you need to add the games they have played <strong>within the last month</strong>, once this is done you can run the prediction.
     </p>
     
@@ -115,12 +115,17 @@
 
         <button type="button" class="btn btn-primary" onclick="addGame(null)">Add Game</button>
         <button type="submit" class="btn btn-outline-success">Submit</button>
+        {% if injury_risk_prediction %}
+        <br/>
+        <br/>
+        <button type="submit" class="btn btn-primary" name="generate_pdf" value="yes">Generate PDF Report</button>
+        {% else %}
+        {% endif %}
     </form>
 </div>
 <br/>
 
 {% if injury_risk_prediction %}
-<br/>
 <div class="accordion" id="prediction">
     <div class="accordion-item">
       <h2 class="accordion-header">

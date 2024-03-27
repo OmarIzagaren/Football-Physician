@@ -39,7 +39,7 @@
 {% endif %}
 
     <div class="col-auto my-1">
-        {{ form.injury }}
+        {{ form.injury }} 
     </div>
     <br/>
     <div class="form-floating">
@@ -53,8 +53,8 @@
         <br/>
     </div>
     <div>
-        {{ form.injured }}
-        <label for="id_injured" {% if form.injured.value %}checked="checked"{% endif %}>Injured</label>
+        <input type="checkbox" id="id_injured" name="injured" {% if form.injured.value %}checked{% endif %}>
+        <label for="id_injured">Injured</label>
     </div>
     <br/>
     <button type="submit" class="btn btn-outline-primary">{{ title }}</button>
@@ -89,13 +89,15 @@
         var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         console.log(injuredCheckbox)
 
-        deleteInjury.addEventListener('click', function(){
-            var injuryId = deleteInjury.getAttribute('data-injury-id');
-            document.getElementById('confirmDelete').setAttribute('data-injury-id', injuryId);
-        
-            var deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
-            deleteModal.show();
-        })
+        if (deleteInjury){
+            deleteInjury.addEventListener('click', function(){
+                var injuryId = deleteInjury.getAttribute('data-injury-id');
+                document.getElementById('confirmDelete').setAttribute('data-injury-id', injuryId);
+            
+                var deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
+                deleteModal.show();
+            })
+        }
 
         document.getElementById('confirmDelete').addEventListener('click', function() {
             var injuryId = this.getAttribute('data-injury-id');
@@ -113,7 +115,6 @@
                     console.log('Player deleted successfully');
                     window.location.href = xhr.responseText;
                 } else {
-                    // Handle error
                     console.log('Error deleting player');
                 }
             };
@@ -129,7 +130,6 @@
 
 
         injuredCheckbox.addEventListener('change', function () {
-            console.log("HELLOOOOO")
             toggleInjuryEndDateVisibility();
         });
 

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from django.urls import reverse
 from django.core.files.uploadedfile import TemporaryUploadedFile
 
@@ -11,6 +11,7 @@ import os
 import tempfile
 import base64
 from .predictions import clean_and_predict
+from .generatePDF import generate_pdf
 from .forms import SignUpForm, PlayerForm, InjuryForm
 from .models import Player, Injury
 from roboflow import Roboflow
@@ -277,6 +278,10 @@ def predict_injury(request):
 
             elif injury_risk_prediction == "Extreme Risk":
                 paragraphs = extreme_risk_paragraphs
+            
+            if form.get('generate_pdf') == 'yes':
+                pdf_file,namefile = generate_pdf(player_id,injury_risk_prediction,paragraphs)
+                return FileResponse(pdf_file,as_attachment=True,filename=namefile)
 
             return render(request, 'injury_prediction.html', {'model':model, 'player_id':player_id, 'players': players, 'form':form, 'games':games,'injury_risk_prediction': injury_risk_prediction, 'paragraphs': paragraphs})
     else: 
@@ -298,13 +303,14 @@ def detect_acl(request):
                 for chunk in image_file.chunks():
                     temp_file.write(chunk)
 
-                temp_file_path = temp_file.name  # Get the temporary file path
-                temp_file.seek(0)  # Ensure that the file cursor is at the beginning of the file
+                temp_file_path = temp_file.name 
+                temp_file.seek(0) 
 
                 rf = Roboflow(api_key="UNYXpfLbL0acg3VBqsJ4")
-                project = rf.workspace().project("classification-of-acl-injuriesv-v9dlc")
-                model = project.version(6).model
+                project = rf.workspace().project("acl-injury-severity-classifier")
+                model = project.version(1).model
                 mri_prediction = model.predict(temp_file_path, confidence=50, overlap=30).json()
+
                 try:
                     injury_class = mri_prediction['predictions'][0]['class']
                     if injury_class == "healthy":
@@ -323,13 +329,13 @@ def detect_acl(request):
                     paragraphs = ["","",""]
 
 
-                temp_file.seek(0)  # Ensure the file cursor is at the beginning
+                temp_file.seek(0) 
                 base64_img = base64.b64encode(temp_file.read()).decode('utf-8')
                 image_url = f'data:image/jpeg;base64,{base64_img}'
 
             finally:
-                temp_file.close()  # Close the temporary file
-                os.unlink(temp_file_path)  # Delete the temporary file
+                temp_file.close() 
+                os.unlink(temp_file_path)
             
             return render(request, 'injury_scan_acl.html', {'image':image_url,'img_name':image_file, 'injury':injury_class, 'paragraphs':paragraphs})
     else: 

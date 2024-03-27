@@ -9,11 +9,11 @@ class CustomUser(AbstractUser):
 
 
 class Player(models.Model):
-    user = models.ForeignKey(get_user_model(), null=True, on_delete= models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete= models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     position = models.CharField(max_length = 10)
-    date_of_birth = models.DateField(null=True, blank=False)
+    date_of_birth = models.DateField()
     height = models.IntegerField()
     weight = models.IntegerField()
     country = models.CharField(max_length=50)
@@ -22,9 +22,9 @@ class Player(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 class Injury(models.Model):
-    player = models.ForeignKey(Player, null=True, on_delete= models.CASCADE)
+    player = models.ForeignKey(Player, on_delete= models.CASCADE)
     injury = models.CharField(max_length=50)
     injury_start_date = models.DateField()
     injury_end_date = models.DateField(null=True, blank=True)
-    injury_age = models.IntegerField(blank=True)
+    injury_age = models.IntegerField()
     injured = models.BooleanField(default = False)
