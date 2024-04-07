@@ -22,7 +22,7 @@ def clean_and_predict(player_id,minutes,model):
     age = today.year - date_of_birth.year - ((today.month, today.day) < (date_of_birth.month, date_of_birth.day))
 
     #Append player info to array
-    player_details.extend([player.position, age, player.height, player.weight, getRegion(player.country), total_minutes])
+    player_details.extend([player.position, age, player.height, player.weight, get_region(player.country), total_minutes])
 
     #Get injury details and put into array
     injuries = Injury.objects.filter(player=player)
@@ -84,7 +84,7 @@ def clean_and_predict(player_id,minutes,model):
         return prediction_input.prediction()
 
 #This function takes the country and returns the countries region i.e. Western Europe, Northern African, etc.
-def getRegion(country):
+def get_region(country):
         url = f"https://api.api-ninjas.com/v1/country?name={country}"
         response = requests.get(url, headers={'X-Api-Key': 'eco5fNw060OIGUTVv5Y8LA==WWjLCtwBHJYZt9Aw'})
         if response.status_code == requests.codes.ok:

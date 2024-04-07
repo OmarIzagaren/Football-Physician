@@ -88,20 +88,11 @@
 </div>
 
 <script>
-    // Function to handle file input change event
-
-
     function handleFileInputChange(event) {
-        // Get the selected file
         const file = event.target.files[0];
-
-        // Create a FileReader object
         const reader = new FileReader();
-
-        // Set up the reader to read the file as a data URL
+        
         reader.readAsDataURL(file);
-
-        // When the file is loaded, display it in the image preview area
         reader.onload = function(event) {
             const imageUrl = event.target.result;
             document.getElementById('imagePreview').innerHTML = '<img src="' + imageUrl + '" alt="Selected Image" style="max-width: 100%; max-height: 200px;">';
@@ -109,11 +100,10 @@
         };
     }
 
-    // Attach event listener to the file input element
     document.getElementById('imageInput').addEventListener('change', handleFileInputChange);
 
     document.getElementById('customButton').addEventListener('click', function() {
-        document.getElementById('imageInput').click(); // Trigger the file input click
+        document.getElementById('imageInput').click(); 
     });
 </script>
 

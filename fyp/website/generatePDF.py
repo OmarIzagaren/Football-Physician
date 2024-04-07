@@ -5,8 +5,6 @@ from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
 import io
 from reportlab.lib.colors import HexColor
-from reportlab.platypus import Table, TableStyle
-from reportlab.lib import colors
 
 def wrap_text(text, width, canvas, font_name, font_size):
     """
@@ -61,10 +59,6 @@ def generate_pdf(player_id,risk,info):
     image_height = 2 * inch  # Example height of the image
     image_x = width - image_width - inch + 50 # Subtracting the image width and a margin
     image_y = inch   # Margin from the top
-    print(image_width)
-    print(image_height)
-    print(image_x)
-    print(image_y)
     c.drawImage(image_path, image_x, image_y, width=image_width, height=image_height)
 
 

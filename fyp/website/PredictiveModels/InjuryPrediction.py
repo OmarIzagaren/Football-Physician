@@ -4,10 +4,7 @@ import numpy as np
 import pandas as pd 
 
 random_forest = joblib.load("./website/PredictiveModels/random_forest.joblib")
-#Very similar/the same as svc_poly, depending on number of injuries and whether the player is currently injured minutes played either has no effect
-#or has a very large effect
 svc_rbf = joblib.load("./website/PredictiveModels/svc_rbf_model.joblib")
-#Best and most well rounded
 svr_rbf = joblib.load("./website/PredictiveModels/svm_rbf_model.joblib")
 
 
@@ -133,42 +130,42 @@ class MakePrediction:
 
         final_array = pd.DataFrame([self.input_array])
         final_array.columns = ['Age','Height','Weight','dsli','mins','median_dbi','avg_loi','mode_is','avg_aoi','noi','injured','Attack','Defender','Goalkeeper','midfield','Caribbean','Central America','Eastern Africa','Eastern Asia','Eastern Europe','Middle Africa','Northern Africa','Northern America','Northern Europe','South America','Southern Africa','Southern Europe','Western Africa','Western Asia','Western Europe']
-        final_percentage = self.model.predict(final_array)
+        risk_prediction = self.model.predict(final_array)
 
         if self.is_classifier:
-            if final_percentage == 0:
+            if risk_prediction == 0:
                 return "Very Low Risk"
             
-            elif final_percentage == 1:
+            elif risk_prediction == 1:
                 return "Low Risk"
             
-            elif final_percentage == 2:
+            elif risk_prediction == 2:
                 return "Moderate Risk"
             
-            elif final_percentage == 3:
+            elif risk_prediction == 3:
                 return "High Risk"
             
-            elif final_percentage == 4:
+            elif risk_prediction == 4:
                 return "Very High Risk"
             
-            elif final_percentage == 5:
+            elif risk_prediction == 5:
                 return "Extreme Risk"
             
         else:
-            if final_percentage <= 10:
+            if risk_prediction <= 10:
                 return "Very Low Risk"
         
-            elif 10 < final_percentage <= 30:
+            elif 10 < risk_prediction <= 30:
                 return "Low Risk"
             
-            elif 30 < final_percentage <= 55:
+            elif 30 < risk_prediction <= 55:
                 return "Moderate Risk"
             
-            elif 55 < final_percentage <= 70:
+            elif 55 < risk_prediction <= 70:
                 return "High Risk"
             
-            elif 70 < final_percentage <= 90:
+            elif 70 < risk_prediction <= 90:
                 return "Very High Risk"
             
-            elif 90 < final_percentage:
+            elif 90 < risk_prediction:
                 return "Extreme Risk"
