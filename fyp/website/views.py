@@ -62,16 +62,15 @@ def register_user(request):
         form.errors.clear()
     return render(request, 'register.html', {'form':form, 'errors_list':errors_list})
 
-def player_details(request):
+def player(request):
     if request.user.is_authenticated:
         form = PlayerForm(request.POST or None)
         if request.method == 'POST':
             if form.is_valid():
                 add_player = form.save(commit=False)
                 add_player.user = request.user
-                add_player.user_id = request.user.id
                 add_player.save()
-                messages.success(request, "Player successfully registered.")
+                messages.success(request, "Player successfully created.")
                 return redirect('home')
         errors_list = []
         if form.errors:
@@ -81,11 +80,10 @@ def player_details(request):
         form.errors.clear()
         return render(request, 'player.html', {'form':form, 'errors_list':errors_list})
     else: 
-        messages.success(request, "You have to log in to access this page.")
+        messages.error(request, "You have to log in to access this page.")
         return redirect('home')
 
-
-def injury_details(request):
+def add_injury(request):
     title = 'Add Injury'
     if request.user.is_authenticated:
         try:
@@ -104,19 +102,15 @@ def injury_details(request):
                         if field.errors: 
                             errors_list.append(field.errors)
                 form.errors.clear()
-                return render(request, 'add_injury.html', {'form':form, 'errors_list':errors_list, 'title': title})
+                return render(request, 'injury.html', {'form':form, 'errors_list':errors_list, 'title': title})
         except ValidationError as e:
-            error_message = str(e)
-            error_message = error_message.replace("'",'')
-            error_message = error_message.replace("[",'')
-            error_message = error_message.replace("]",'')
-            messages.error(request, error_message)
+            messages.error(request, e.messages[0])
             return redirect('player')
     else: 
         messages.error(request, "You have to log in to access this page.")
         return redirect('home')
 
-    return render(request, 'add_injury.html', {'form': form, 'title': title})
+    return render(request, 'injury.html', {'form': form, 'title': title})
 
 def player_view(request):
     if request.user.is_authenticated:
@@ -133,6 +127,9 @@ def get_player_injuries(request):
     selected_player = request.GET.get('selected_player', None)
     
     injuries = Injury.objects.filter(player=selected_player).order_by('-injury_start_date')
+    if bool(injuries) == False:
+        return HttpResponse("This player has no injuries.")
+    
     injuries_html = (
         f'<thead>'
         f'<tr>'
@@ -163,32 +160,33 @@ def get_player_injuries(request):
             f'<td><a href="{edit_url}" class="btn btn-outline-secondary btn-sm">Edit Injury</a></td>'
             f'</tr>'
         )
-    
-    if bool(injuries) == False:
-        return HttpResponse("This player has no injuries.")
 
     return HttpResponse(injuries_html)
 
 def edit_injury(request,injury_id):
-    injury = Injury.objects.get(id=injury_id) 
-    title = 'Edit Injury'
-    if request.method == 'POST':
-        form = InjuryForm(request.POST, instance=injury, user=request.user)
-        if form.is_valid():
-            form.save()
-            messages.success(request,'Injury successfully edited.')
-            return redirect('view_player')
-        errors_list = []
-        if form.errors:
-            for field in form:
-                if field.errors: 
-                    errors_list.append(field.errors)
-        form.errors.clear()
-        return render(request, 'add_injury.html', {'form':form, 'errors_list':errors_list, 'title': title, 'injury_id': injury_id})
-    else:
-        form = InjuryForm(instance=injury, user=request.user)
+    try:
+        injury = Injury.objects.get(id=injury_id) 
+        title = 'Edit Injury'
+        if request.method == 'POST':
+            form = InjuryForm(request.POST, instance=injury, user=request.user)
+            if form.is_valid():
+                form.save()
+                messages.success(request,'Injury successfully edited.')
+                return redirect('view_player')
+            errors_list = []
+            if form.errors:
+                for field in form:
+                    if field.errors: 
+                        errors_list.append(field.errors)
+            form.errors.clear()
+            return render(request, 'injury.html', {'form':form, 'errors_list':errors_list, 'title': title, 'injury_id': injury_id})
+        else:
+            form = InjuryForm(instance=injury, user=request.user)
+    except: 
+        messages.error(request, "This player is not linked to your account. ")
+        return redirect('view_player')
 
-    return render(request, 'add_injury.html', {'form': form, 'title': title, 'injury_id': injury_id})
+    return render(request, 'injury.html', {'form': form, 'title': title, 'injury_id': injury_id})
 
 def get_player_details(request):
     selected_player = request.GET.get('selected_player', None)
@@ -260,7 +258,6 @@ def predict_injury(request):
             games = form.getlist('games[]')
             model = form.get('model')
             injury_risk_prediction = clean_and_predict(player_id, games, model)
-            #print(injury_risk_prediction)
             if injury_risk_prediction == "Very Low Risk":
                 paragraphs = very_low_risk_paragraphs
 
@@ -288,7 +285,6 @@ def predict_injury(request):
         messages.error(request, "You have to log in to access this page.")
         return redirect('home')
     return render(request, 'injury_prediction.html', {'players': players})
-
 
 def detect_acl(request):
     healthy_paragraphs = ["Not applicable.", "Not applicable.", "Emphasize exercises that support ACL health, such as hamstring and quadriceps strengthening, plyometrics for dynamic stability, and balance exercises to improve proprioception. Core strengthening is also crucial for maintaining proper alignment and reducing the risk of ACL strain. Training proper landing and pivoting techniques can also prevent undue stress on the ACL."]

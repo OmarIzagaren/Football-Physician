@@ -87,10 +87,8 @@ class InjuryForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
-        print("User passed to form:", user)
         super().__init__(*args, **kwargs)
         players = Player.objects.filter(user=user)
-        print(players)
         self.fields['injury_start_date'].widget.attrs['max'] = str(date.today())
         self.fields['injury_end_date'].widget.attrs['max'] = str(date.today())
 
@@ -107,7 +105,6 @@ class InjuryForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         injured = cleaned_data.get("injured")
-        print(injured)
         if injured:
             cleaned_data['injury_end_date'] = None
         else: 
@@ -126,9 +123,11 @@ class InjuryForm(forms.ModelForm):
         player = cleaned_data.get("player")
 
         if player and injury_start_date:
-            injury_age = injury_start_date.year - player.date_of_birth.year - ((injury_start_date.month, injury_start_date.day) < (player.date_of_birth.month, player.date_of_birth.day))
-            print(injury_age)
+            injury_age = (
+                injury_start_date.year - player.date_of_birth.year - 
+                ((injury_start_date.month, injury_start_date.day) < (player.date_of_birth.month, player.date_of_birth.day))
+            )
             cleaned_data['injury_age'] = injury_age
 
-        print(cleaned_data)
         return cleaned_data
+    

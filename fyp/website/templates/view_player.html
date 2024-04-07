@@ -65,17 +65,6 @@
                 displayDetails.innerHTML = "";
             } 
             else {
-                var xhr_injuries = new XMLHttpRequest();
-    
-                xhr_injuries.open('GET', 'get_player_injuries/?selected_player=' + encodeURIComponent(selectedPlayer), true);
-    
-                xhr_injuries.onreadystatechange = function() {
-                    if (xhr_injuries.readyState === 4 && xhr_injuries.status === 200) {
-                        displayInjuries.innerHTML = xhr_injuries.responseText;
-                    }
-                };
-                xhr_injuries.send();
-
                 var xhr_details = new XMLHttpRequest();
     
                 xhr_details.open('GET', 'get_player_details/?selected_player=' + encodeURIComponent(selectedPlayer), true);
@@ -92,6 +81,17 @@
                     }
                 };
                 xhr_details.send();
+                
+                var xhr_injuries = new XMLHttpRequest();
+    
+                xhr_injuries.open('GET', 'get_player_injuries/?selected_player=' + encodeURIComponent(selectedPlayer), true);
+    
+                xhr_injuries.onreadystatechange = function() {
+                    if (xhr_injuries.readyState === 4 && xhr_injuries.status === 200) {
+                        displayInjuries.innerHTML = xhr_injuries.responseText;
+                    }
+                };
+                xhr_injuries.send();
             }
         };
 
@@ -101,8 +101,6 @@
             if(target.classList.contains('delete-player')){
                 var playerId = target.getAttribute('data-player-id');
                 document.getElementById('confirmDelete').setAttribute('data-player-id', playerId);
-            
-                // Trigger the modal
                 var deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
                 deleteModal.show();
             }

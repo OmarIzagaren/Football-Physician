@@ -75,17 +75,11 @@
             <input type="radio" class="btn-check" name="model" id="option1" value="svr_rbf" checked>
             <label class="btn btn-outline-secondary" for="option1">SVR RBF</label>
 
-            <input type="radio" class="btn-check" name="model" id="option2" value="svr_poly" {% if model == 'svr_poly' %}checked{% endif %}>
-            <label class="btn btn-outline-secondary" for="option2">SVR Poly</label>
+            <input type="radio" class="btn-check" name="model" id="option2" value="svc_rbf" {% if model == 'svc_rbf' %}checked{% endif %}>
+            <label class="btn btn-outline-secondary" for="option2">SVC RBF</label>
 
-            <input type="radio" class="btn-check" name="model" id="option3" value="svc_rbf" {% if model == 'svc_rbf' %}checked{% endif %}>
-            <label class="btn btn-outline-secondary" for="option3">SVC RBF</label>
-
-            <input type="radio" class="btn-check" name="model" id="option4" value="svc_poly" {% if model == 'svc_poly' %}checked{% endif %}>
-            <label class="btn btn-outline-secondary" for="option4">SVC Poly</label>
-
-            <input type="radio" class="btn-check" name="model" id="option5" value="rfr" {% if model == 'rfr' %}checked{% endif %}>
-            <label class="btn btn-outline-secondary" for="option5">RFR</label>
+            <input type="radio" class="btn-check" name="model" id="option3" value="rfr" {% if model == 'rfr' %}checked{% endif %}>
+            <label class="btn btn-outline-secondary" for="option3">RFR</label>
             
         </div>
         <br/>
@@ -201,24 +195,8 @@
             }
             else if (checkedRadioButton.id == "option2") {
                 displayModelInfo.innerHTML = `
-                <h5 class="card-title">SVR Poly Model</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Support Vector Regression with Polynomial kernel</h6>
-                <p class="card-text">This model shows a slight bias towards minutes played and is particularly 
-                    effective for predicting injury likelihood among currently injured players.</p>
-                `;
-            }
-            else if (checkedRadioButton.id == "option3") {
-                displayModelInfo.innerHTML = `
                 <h5 class="card-title">SVC RBF Model</h5>
                 <h6 class="card-subtitle mb-2 text-muted">Support Vector Classifier with Radial Basis Function kernel</h6>
-                <p class="card-text">This model's behavior varies based on the number of injuries and current injury status. 
-                    Dependant on those factors, minutes played may have no effect or a significant effect on predictions.</p>
-                `;
-            }
-            else if (checkedRadioButton.id == "option4"){
-                displayModelInfo.innerHTML = `
-                <h5 class="card-title">SVC Poly Model</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Support Vector Classifier with Polynomial kernel</h6>
                 <p class="card-text">This model's behavior varies based on the number of injuries and current injury status. 
                     Dependant on those factors, minutes played may have no effect or a significant effect on predictions.</p>
                 `;
@@ -247,24 +225,8 @@
             }
             else if (checkedRadioButton.id == "option2") {
                 displayModelInfo.innerHTML = `
-                <h5 class="card-title">SVR Poly Model</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Support Vector Regression with Polynomial kernel</h6>
-                <p class="card-text">This model shows a slight bias towards minutes played and is particularly 
-                    effective for predicting injury likelihood among currently injured players.</p>
-                `;
-            }
-            else if (checkedRadioButton.id == "option3") {
-                displayModelInfo.innerHTML = `
                 <h5 class="card-title">SVC RBF Model</h5>
                 <h6 class="card-subtitle mb-2 text-muted">Support Vector Classifier with Radial Basis Function kernel</h6>
-                <p class="card-text">This model's behavior varies based on the number of injuries and current injury status. 
-                    Dependant on those factors, minutes played may have no effect or a significant effect on predictions.</p>
-                `;
-            }
-            else if (checkedRadioButton.id == "option4"){
-                displayModelInfo.innerHTML = `
-                <h5 class="card-title">SVC Poly Model</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Support Vector Classifier with Polynomial kernel</h6>
                 <p class="card-text">This model's behavior varies based on the number of injuries and current injury status. 
                     Dependant on those factors, minutes played may have no effect or a significant effect on predictions.</p>
                 `;

@@ -8,6 +8,20 @@ from reportlab.lib.colors import HexColor
 from reportlab.platypus import Table, TableStyle
 from reportlab.lib import colors
 
+def wrap_text(text, width, canvas, font_name, font_size):
+    """
+    Wraps text so it fits within a specific width when using the specified font name and size.
+    This function breaks the text into lines that fit within the specified width.
+    """
+    canvas.setFont(font_name, font_size)
+    wrapped_lines = []
+    words = text.split()
+    while words:
+        line = ''
+        while words and canvas.stringWidth(line + words[0], font_name, font_size) < width:
+            line += (words.pop(0) + ' ')
+        wrapped_lines.append(line)
+    return wrapped_lines
 
 def generate_pdf(player_id,risk,info):
     buf = io.BytesIO()
@@ -66,7 +80,7 @@ def generate_pdf(player_id,risk,info):
     filename = f'{player.first_name}_{player.last_name}_Report.pdf'
 
     # Calculate center for the player name
-    name = f'{player.first_name} {player.last_name}' + "  Injury report"
+    name = f'{player.first_name} {player.last_name}' + "  ACL Risk Report"
     text_width = c.stringWidth(name, "Helvetica-Bold", 18)  # Measure text width with desired font and size
     text_x_center = (width - text_width) / 2  # Calculate x position to center text
     
@@ -99,12 +113,22 @@ def generate_pdf(player_id,risk,info):
         textob.setFont("Helvetica", 14)
         textob.textLine(value)
 
-    
 
      # Display the risk in PDF
     textob.moveCursor(200, 30)
 
-    risk_banner_color = HexColor("#f5bf2c")  # Example: a yellow color
+    if risk == "Extreme Risk":
+        risk_banner_color = HexColor("#FF0000") 
+    elif risk == "Very High Risk":
+        risk_banner_color = HexColor("#FF4500") 
+    elif risk == "High Risk":
+        risk_banner_color = HexColor("#FFA500") 
+    elif risk == "Moderate Risk":
+        risk_banner_color = HexColor("#FFD700") 
+    elif risk == "Low Risk":
+        risk_banner_color = HexColor("#90EE90") 
+    elif risk == "Very Low Risk":
+        risk_banner_color = HexColor("#00FF00") 
     banner_x = inch / 2  # Example starting x position
     banner_y = textob.getY() - 15  # Get current y position from text object and adjust
     banner_width = width - inch # Full width of the page minus margins
@@ -125,10 +149,7 @@ def generate_pdf(player_id,risk,info):
     textob.setFont("Helvetica", 14)
     textob.textOut(" " + risk)  # Space as a separator
 
-    
-
     textob.moveCursor(-165, 50)
-
 
     # #Display injuries in PDF
     injuries = Injury.objects.filter(player=player_id).order_by('injury_start_date')
@@ -180,11 +201,23 @@ def generate_pdf(player_id,risk,info):
 
     
     #Display info(an array) in PDF
+    info_titles= ["Exercises to avoid:","Exercises to do:","Advice:"]
+
+    additional_info_lines = []
+    max_width = width - 2 * inch
+    for info_title,info_text in zip(info_titles,info):
+        additional_info_lines.append(info_title)
+        wrapped_lines = wrap_text(info_text, max_width, c, "Helvetica", 14)
+        additional_info_lines.extend(wrapped_lines)
+        additional_info_lines.append('')  # Add a blank line between sections for readability
+
+    # Display the wrapped lines
+    textob.setFont("Helvetica-Bold", 14)
     textob.textLine("")
     textob.textLine("Additional Information:")
-
-    for i in info:
-        textob.textLine(i)
+    textob.setFont("Helvetica", 14)
+    for line in additional_info_lines:
+        textob.textLine(line)
 
     footer_color = HexColor("#469285")  # Example: a yellow color
     footer_x = 0  # Example starting x position

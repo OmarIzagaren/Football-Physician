@@ -21,8 +21,52 @@
 	{% endif %}
     {{ form.as_p }}
 		<br/>
+		<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tac">Terms and Conditions</button>
+		<br/>
+		<br/>
     <button type="submit" class="btn btn-outline-primary">Register</button>
+	<p>By <strong>registering</strong> you confirm that you have read, understood, and <strong>accepted</strong> these terms and conditions.<p>
 </form>
 <br/>
+<br/>
 
+<div class="modal fade" id="tac" tabindex="-1" aria-labelledby="tacLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tacLabel">Terms and Conditions</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+			<strong>1.</strong> You acknowledge and consent to the storage of your personal and health-related information provided during the registration and usage of our services.
+			<br/>
+			<br/>
+			<strong>2.</strong> You understand that the prediction features provided by our models may not be 100% accurate and are generated based on available data and statistical models. These predictions are not intended to replace or overrule the expert advice and diagnosis of medical professionals.
+			<br/>
+			<br/>
+			<strong>3.</strong> The platform is designed to cater predictions specifically for male athletes aged 16 and above. You acknowledge that the predictive models and data are currently not applicable to female athletes or males under the age of 16.
+			<br/>
+			<br/>
+			By <strong>registering</strong> you confirm that you have read, understood, and <strong>accept</strong> these terms and conditions.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Accept</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	document.addEventListener('DOMContentLoaded', function() {
+	  var myModal = new bootstrap.Modal(document.getElementById('tac'), {
+		keyboard: false
+	  });
+	
+	  var tacButton = document.querySelector('[data-bs-toggle="modal"]');
+	  
+	  tacButton.addEventListener('click', function() {
+		myModal.show();
+	  });
+	});
+</script>
 {% endblock %}

@@ -26,5 +26,7 @@ class Injury(models.Model):
     injury = models.CharField(max_length=50)
     injury_start_date = models.DateField()
     injury_end_date = models.DateField(null=True, blank=True)
-    injury_age = models.IntegerField()
+    injury_age = models.IntegerField(blank=True)
     injured = models.BooleanField(default = False)
+
+
