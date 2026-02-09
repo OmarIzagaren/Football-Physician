@@ -42,18 +42,22 @@ jobs:
                 python-version: "3.11"
 
             - name: Install dependencies
+              working-directory: fyp
               run: |
                 python -m pip install --upgrade pip
-                pip install -r fyp/requirements.txt
+                pip install -r requirements.txt
 
             - name: Django system check
+              working-directory: fyp
               run: |
-                python fyp/manage.py check
+                python manage.py check
 
             - name: Run migrations
+              working-directory: fyp
               run: |
-                python fyp/manage.py migrate
+                python manage.py migrate
 
             - name: Run tests
+              working-directory: fyp
               run: |
-                python fyp/manage.py test
+                python manage.py test
