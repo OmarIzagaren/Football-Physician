@@ -81,11 +81,11 @@ WSGI_APPLICATION = 'fyp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env("DB_NAME", "test_db"), 
-        'USER': env("DB_USER", "postgres"), 
-        'PASSWORD': env("DB_PASSWORD", "postgres"), 
-        'HOST': env("DB_HOST", "localhost"), 
-        'PORT': env("DB_PORT", "5432"), 
+        'NAME': env("DB_NAME", default="test_db"), 
+        'USER': env("DB_USER", default="postgres"), 
+        'PASSWORD': env("DB_PASSWORD", default="postgres"), 
+        'HOST': env("DB_HOST", default="localhost"), 
+        'PORT': env("DB_PORT", default="5432"), 
     }
 }
 
